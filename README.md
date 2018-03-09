@@ -1,8 +1,2 @@
-### Pup
-A boilerplate for products.
-
-[Read the Documentation](http://cleverbeagle.com/pup)
-
----
-
-Need help and want to stay accountable building your product? [Check out Clever Beagle](http://cleverbeagle.com).
+### Stattt
+Just for fun and the love of numbers and patterns. Stattt is a quick and simple way to survey and log things about an event. This project is helping me learn Meteor, React, and Mongo DB.
