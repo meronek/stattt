@@ -16,6 +16,13 @@ import Documents from '../../pages/Documents/Documents';
 import NewDocument from '../../pages/NewDocument/NewDocument';
 import ViewDocument from '../../pages/ViewDocument/ViewDocument';
 import EditDocument from '../../pages/EditDocument/EditDocument';
+
+import Events from '../../pages/Events/Events';
+import NewEvent from '../../pages/NewEvent/NewEvent';
+import ViewEvent from '../../pages/ViewEvent/ViewEvent';
+import EditEvent from '../../pages/EditEvent/EditEvent';
+
+
 import Signup from '../../pages/Signup/Signup';
 import Login from '../../pages/Login/Login';
 import Logout from '../../pages/Logout/Logout';
@@ -61,6 +68,12 @@ class App extends React.Component {
             <Grid>
               <Switch>
                 <Route exact name="index" path="/" component={Index} />
+
+                <Authenticated exact path="/events" component={Events} setAfterLoginPath={setAfterLoginPath} {...props} {...state} />
+                <Authenticated exact path="/events/new" component={NewEvent} setAfterLoginPath={setAfterLoginPath} {...props} {...state} />
+                <Authenticated exact path="/events/:_id" component={ViewEvent} setAfterLoginPath={setAfterLoginPath} {...props} {...state} />
+                <Authenticated exact path="/events/:_id/edit" component={EditEvent} setAfterLoginPath={setAfterLoginPath} {...props} {...state} />
+
                 <Authenticated exact path="/documents" component={Documents} setAfterLoginPath={setAfterLoginPath} {...props} {...state} />
                 <Authenticated exact path="/documents/new" component={NewDocument} setAfterLoginPath={setAfterLoginPath} {...props} {...state} />
                 <Authenticated exact path="/documents/:_id" component={ViewDocument} setAfterLoginPath={setAfterLoginPath} {...props} {...state} />
