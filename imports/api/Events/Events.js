@@ -33,6 +33,20 @@ Events.schema = new SimpleSchema({
     type: String,
     label: 'The title of the event.',
   },
+  occurenceOptions: {
+    type: Array,
+    defaultValue: [],
+    label: 'The list of options you have for occurences of this event.',
+    optional: true,
+  },
+  'occurenceOptions.$': {
+    type: Object,
+    label: 'The list of options you have for occurences of this event.',
+  },
+  'occurenceOptions.$.title': {
+    type: String,
+    label: 'The title of the occurence.',
+  },
 });
 
 Events.attachSchema(Events.schema);
