@@ -47,6 +47,11 @@ Events.schema = new SimpleSchema({
     type: String,
     label: 'The title of the occurence.',
   },
+  'occurenceOptions.$.active': {
+    type: Boolean,
+    label: 'Is this option active?',
+    defaultValue: true,
+  },
 });
 
 Events.attachSchema(Events.schema);

@@ -7,6 +7,7 @@ import { Bert } from 'meteor/themeteorchef:bert';
 import Events from '../../../api/Events/Events';
 import NotFound from '../NotFound/NotFound';
 import Loading from '../../components/Loading/Loading';
+import EventOccurenceOptions from '../../components/EventOccurenceOptions/EventOccurenceOptions';
 
 const handleRemove = (eventId, history) => {
   if (confirm('Are you sure? This is permanent!')) {
@@ -24,7 +25,7 @@ const handleRemove = (eventId, history) => {
 const renderEvent = (event, match, history) => (event ? (
   <div className="ViewEvent">
     <div className="page-header clearfix">
-      <h4 className="pull-left">{ event && event.title }</h4>
+      <h4 className="pull-left">Occurence Options for:<br /><br />{ event && event.title }</h4>
       <ButtonToolbar className="pull-right">
         <ButtonGroup bsSize="small">
           <Button onClick={() => history.push(`${match.url}/edit`)}>Edit</Button>
@@ -34,7 +35,9 @@ const renderEvent = (event, match, history) => (event ? (
         </ButtonGroup>
       </ButtonToolbar>
     </div>
-    { event && event.title }
+
+    <EventOccurenceOptions eventId={event._id} />
+
   </div>
 ) : <NotFound />);
 
