@@ -17,6 +17,8 @@ Events.deny({
   remove: () => true,
 });
 
+SimpleSchema.extendOptions(['unique']);
+
 Events.schema = new SimpleSchema({
   owner: {
     type: String,
@@ -33,21 +35,22 @@ Events.schema = new SimpleSchema({
     type: String,
     label: 'The title of the event.',
   },
-  occurenceOptions: {
+  occurrenceOptions: {
     type: Array,
     defaultValue: [],
-    label: 'The list of options you have for occurences of this event.',
+    label: 'The list of options you have for occurrences of this event.',
     optional: true,
   },
-  'occurenceOptions.$': {
+  'occurrenceOptions.$': {
     type: Object,
-    label: 'The list of options you have for occurences of this event.',
+    label: 'The list of options you have for occurrences of this event.',
   },
-  'occurenceOptions.$.title': {
+  'occurrenceOptions.$.title': {
     type: String,
-    label: 'The title of the occurence.',
+    label: 'The title of the occurrence.',
+    unique: true,
   },
-  'occurenceOptions.$.active': {
+  'occurrenceOptions.$.active': {
     type: Boolean,
     label: 'Is this option active?',
     defaultValue: true,

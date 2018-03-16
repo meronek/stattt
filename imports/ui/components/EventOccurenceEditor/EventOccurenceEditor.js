@@ -7,7 +7,7 @@ import { Meteor } from 'meteor/meteor';
 import { Bert } from 'meteor/themeteorchef:bert';
 import validate from '../../../modules/validate';
 
-class EventOccurenceEditor extends React.Component {
+class EventOccurrenceEditor extends React.Component {
   componentDidMount() {
     const component = this;
     validate(component.form, {
@@ -23,22 +23,22 @@ class EventOccurenceEditor extends React.Component {
 
   handleSubmit(form) {
     const { history } = this.props;
-    const existingOccurence = this.props.occurence && this.props.occurence._id;
-    const methodToCall = existingOccurence ? 'eventoccurances.update' : 'eventoccurances.insert';
-    const occurence = {
-	  // save all the checked items into the occurenceItems array here...
+    const existingOccurrence = this.props.occurrence && this.props.occurrence._id;
+    const methodToCall = existingOccurrence ? 'eventoccurances.update' : 'eventoccurances.insert';
+    const occurrence = {
+	  // save all the checked items into the occurrenceItems array here...
 	  // title: form.title.value.trim(),
     // body: form.body.value.trim(),
     };
 
-    if (existingOccurence) occurence._id = existingOccurence;
+    if (existingOccurrence) occurrence._id = existingOccurrence;
 
-    Meteor.call(methodToCall, occurence, (error) => {
+    Meteor.call(methodToCall, occurrence, (error) => {
       if (error) {
         Bert.alert(error.reason, 'danger');
       } else {
         // during testing, classic add button here, but final will be add on swipe away
-        const confirmation = existingOccurence ? 'Occurence updated!' : 'Occurence added!';
+        const confirmation = existingOccurrence ? 'Occurrence updated!' : 'Occurrence added!';
         // not resetting the form:
         // this.form.reset();
         Bert.alert(confirmation, 'success');
@@ -49,27 +49,27 @@ class EventOccurenceEditor extends React.Component {
   }
 
   render() {
-    const { occurence } = this.props;
+    const { occurrence } = this.props;
     return (
       <form ref={form => (this.form = form)} onSubmit={event => event.preventDefault()}>
         <div>
-		  here, build the list of occurence options for this event and give them checkboxes next to each
+		  here, build the list of occurrence options for this event and give them checkboxes next to each
         </div>
         <Button type="submit" bsStyle="success">
-          {occurence && occurence._id ? 'Save Changes' : 'Add Occurence'}
+          {occurrence && occurrence._id ? 'Save Changes' : 'Add Occurrence'}
         </Button>
       </form>
     );
   }
 }
 
-EventOccurenceEditor.defaultProps = {
-  occurence: { occurenceItems: {} },
+EventOccurrenceEditor.defaultProps = {
+  occurrence: { occurrenceItems: {} },
 };
 
-EventOccurenceEditor.propTypes = {
-  occurence: PropTypes.object,
+EventOccurrenceEditor.propTypes = {
+  occurrence: PropTypes.object,
   history: PropTypes.object.isRequired,
 };
 
-export default EventOccurenceEditor;
+export default EventOccurrenceEditor;

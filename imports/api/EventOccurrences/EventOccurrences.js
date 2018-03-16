@@ -3,50 +3,50 @@
 import { Mongo } from 'meteor/mongo';
 import SimpleSchema from 'simpl-schema';
 
-const EventOccurences = new Mongo.Collection('EventOccurences');
+const EventOccurrences = new Mongo.Collection('EventOccurrences');
 
-EventOccurences.allow({
+EventOccurrences.allow({
   insert: () => false,
   update: () => false,
   remove: () => false,
 });
 
-EventOccurences.deny({
+EventOccurrences.deny({
   insert: () => true,
   update: () => true,
   remove: () => true,
 });
 
 /* storing owner in this schema, too, making getting the list a little simpler */
-EventOccurences.schema = new SimpleSchema({
+EventOccurrences.schema = new SimpleSchema({
   owner: {
     type: String,
     label: 'The ID of the user this events belongs to.',
   },
   eventId: {
     type: String,
-    label: 'The ID of the event this occurence belongs to.',
+    label: 'The ID of the event this occurrence belongs to.',
   },
   createdAt: {
     type: String,
-    label: 'The date this occurence was created.',
+    label: 'The date this occurrence was created.',
     autoValue() {
       if (this.isInsert) return (new Date()).toISOString();
     },
   },
   updatedAt: {
     type: String,
-    label: 'The date this occurence was last updated.',
+    label: 'The date this occurrence was last updated.',
     autoValue() {
       if (this.isInsert || this.isUpdate) return (new Date()).toISOString();
     },
   },
-  occurenceItems: {
+  occurrenceItems: {
     type: Array,
-    label: 'The things that are being logged for this occurence.',
+    label: 'The things that are being logged for this occurrence.',
   },
 });
 
-EventOccurences.attachSchema(EventOccurences.schema);
+EventOccurrences.attachSchema(EventOccurrences.schema);
 
-export default EventOccurences;
+export default EventOccurrences;

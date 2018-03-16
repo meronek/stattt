@@ -1,16 +1,16 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import EventOccurenceEditor from '../../components/EventOccurenceEditor/EventOccurenceEditor';
+import EventOccurrenceEditor from '../../components/EventOccurrenceEditor/EventOccurrenceEditor';
 
-const NewEventOccurence = ({ history }) => (
+const NewEventOccurrence = ({ history }) => (
   <div className="NewEvent">
     <h4 className="page-header">New Occurance</h4>
-    <EventOccurenceEditor history={history} />
+    <EventOccurrenceEditor history={history} />
   </div>
 );
 
-NewEventOccurence.propTypes = {
+NewEventOccurrence.propTypes = {
   history: PropTypes.object.isRequired,
 };
 
-export default NewEventOccurence;
+export default NewEventOccurrence;

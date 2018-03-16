@@ -39,14 +39,16 @@ Meteor.methods({
       handleMethodException(exception);
     }
   },
-  'events.addOccurenceOption': function eventsAddOccurenceOption(options) {
-    // how to make sure only the user that owns this event can insert options?
+  'events.addOccurrenceOption': function eventsAddOccurrenceOption(options) {
+    // make sure only the user that owns this event can insert options
+    // console.log('options is ', options);
     check(options, {
-      eventId: String,
+      _id: String,
+      title: String,
     });
-    return Events.update(options.eventId, {
+    return Events.update({ eventId: options.eventId, userId: options.userId }, {
       $addToSet: {
-        occurenceOptions: { title: options.title },
+        occurrenceOptions: { title: options.title, active: true },
       },
     });
   },
