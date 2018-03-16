@@ -52,6 +52,27 @@ Meteor.methods({
       },
     });
   },
+  'events.removeOccurrenceOption': function eventsRemoveOccurrenceOption(options) {
+    // make sure only the user that owns this event can insert options
+    // console.log('options is ', options);
+    check(options, {
+      _id: String,
+      optionTitle: String,
+    });
+    // console.log('option title is ', options.optionTitle);
+    return Events.update({ eventId: options.eventId, userId: options.userId }, {
+      $pull: {
+        occurrenceOptions: ({ title: options.optionTitle }),
+      },
+    });
+
+    // trying to set active = false here and can't figure it out:
+    // return Events.update({ eventId: options.eventId, userId: options.userId }, {
+    //   $set: {
+    //     occurrenceOptions: ({ title: options.optionTitle }, { $set: { active: false } }),
+    //   },
+    // });
+  },
 });
 
 rateLimit({

@@ -48,6 +48,21 @@ class EventOccurrenceOptions extends React.Component {
     });
   }
 
+  handleRemoveOption(optionTitle) {
+    const { match, history } = this.props;
+    Meteor.call('events.removeOccurrenceOption', {
+      optionTitle,
+      _id: this.props.eventId,
+    }, (error) => {
+      if (error) {
+        Bert.alert(error.reason, 'danger');
+      } else {
+        Bert.alert('Occurrence removed.', 'success');
+        // console.log('option title is', optionTitle);
+      }
+    });
+  }
+
   render() {
     const { eventsOccurrenceOptions } = this.props;
     return (
@@ -63,22 +78,14 @@ class EventOccurrenceOptions extends React.Component {
           </InputGroup>
         </FormGroup>
         <h4>Current Options</h4>
-        {console.log('eventsOccurrenceOptions as array is ', Object.keys(eventsOccurrenceOptions.occurrenceOptions).map(i => eventsOccurrenceOptions.occurrenceOptions[i].title))}
-        {console.log('eventsOccurrenceOptions as object is ', Object.keys(eventsOccurrenceOptions.occurrenceOptions))}
 
-        FUCK, LEFT OFF HERE AND CAN'T FIGURE SHIT OUT
-        Objects are not valid as a React child. If you meant to render a collection of children, use an array instead.
-        sort of figured it out here:<br /><br />
         {
 
-          Object.keys(eventsOccurrenceOptions.occurrenceOptions).map(i => (<div key={i}>
-            {eventsOccurrenceOptions.occurrenceOptions[i].title}
-          </div>))
-
-          // fuckinArray.map(({ title }) => (
-
-          // { title }
-          // ))
+          Object.keys(eventsOccurrenceOptions.occurrenceOptions).map(i => (
+            <div key={i}>
+              {eventsOccurrenceOptions.occurrenceOptions[i].title}
+              <Button className="btn-sm" onClick={() => this.handleRemoveOption(eventsOccurrenceOptions.occurrenceOptions[i].title)}>Remove</Button>
+            </div>))
         }
 
       </form>
@@ -90,7 +97,7 @@ class EventOccurrenceOptions extends React.Component {
 
 export default withTracker((eventId) => {
   const subscription = Meteor.subscribe('eventoccurrence.view', eventId.eventId);
-  console.log('event id is', eventId.eventId);
+  // console.log('event id is', eventId.eventId);
   return {
     loading: !subscription.ready(),
     eventsOccurrenceOptions: Events.findOne(eventId.eventId),
