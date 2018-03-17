@@ -51,10 +51,19 @@ const Events = ({
               <td>
                 <Button
                   bsStyle="primary"
+                  onClick={() => history.push(`${match.url}/log/${_id}`)}
+                  block
+                >
+                  Log Occurrences
+                </Button>
+              </td>
+              <td>
+                <Button
+                  bsStyle="primary"
                   onClick={() => history.push(`${match.url}/${_id}`)}
                   block
                 >
-                  View
+                  Options
                 </Button>
               </td>
               <td>

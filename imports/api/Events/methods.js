@@ -59,19 +59,30 @@ Meteor.methods({
       _id: String,
       optionTitle: String,
     });
-    // console.log('option title is ', options.optionTitle);
-    return Events.update({ eventId: options.eventId, userId: options.userId }, {
-      $pull: {
-        occurrenceOptions: ({ title: options.optionTitle }),
-      },
+
+    // trying to set active = false here
+    // https://docs.mongodb.com/manual/reference/operator/update/positional/
+    // console.log(Events.find({ eventId: options.eventId, userId: options.userId }).fetch());
+
+    return Events.update({ eventId: options.eventId, userId: options.userId, 'occurrenceOptions.title': options.optionTitle }, {
+      $set: { 'occurrenceOptions.$.active': false },
+    });
+  },
+  'events.reactivateOccurrenceOption': function eventsReactivateOccurrenceOption(options) {
+    // make sure only the user that owns this event can insert options
+    // console.log('options is ', options);
+    check(options, {
+      _id: String,
+      optionTitle: String,
     });
 
-    // trying to set active = false here and can't figure it out:
-    // return Events.update({ eventId: options.eventId, userId: options.userId }, {
-    //   $set: {
-    //     occurrenceOptions: ({ title: options.optionTitle }, { $set: { active: false } }),
-    //   },
-    // });
+    // trying to set active = false here
+    // https://docs.mongodb.com/manual/reference/operator/update/positional/
+    // console.log(Events.find({ eventId: options.eventId, userId: options.userId }).fetch());
+
+    return Events.update({ eventId: options.eventId, userId: options.userId, 'occurrenceOptions.title': options.optionTitle }, {
+      $set: { 'occurrenceOptions.$.active': true },
+    });
   },
 });
 

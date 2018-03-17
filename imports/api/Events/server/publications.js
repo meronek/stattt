@@ -12,7 +12,3 @@ Meteor.publish('event.view', function eventsView(eventId) {
   return Events.find({ _id: eventId, owner: this.userId });
 });
 
-Meteor.publish('eventoccurrence.view', function eventsView(eventId) {
-  check(eventId, String);
-  return Events.find({ _id: eventId, owner: this.userId });
-});

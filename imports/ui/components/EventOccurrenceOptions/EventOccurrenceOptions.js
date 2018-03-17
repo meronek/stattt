@@ -63,6 +63,21 @@ class EventOccurrenceOptions extends React.Component {
     });
   }
 
+  handleReactivateOption(optionTitle) {
+    const { match, history } = this.props;
+    Meteor.call('events.reactivateOccurrenceOption', {
+      optionTitle,
+      _id: this.props.eventId,
+    }, (error) => {
+      if (error) {
+        Bert.alert(error.reason, 'danger');
+      } else {
+        Bert.alert('Occurrence reactivated.', 'success');
+        // console.log('option title is', optionTitle);
+      }
+    });
+  }
+
   render() {
     const { eventsOccurrenceOptions } = this.props;
     return (
@@ -83,10 +98,34 @@ class EventOccurrenceOptions extends React.Component {
 
           Object.keys(eventsOccurrenceOptions.occurrenceOptions).map(i => (
             <div key={i}>
-              {eventsOccurrenceOptions.occurrenceOptions[i].title}
-              <Button className="btn-sm" onClick={() => this.handleRemoveOption(eventsOccurrenceOptions.occurrenceOptions[i].title)}>Remove</Button>
-            </div>))
+              {eventsOccurrenceOptions.occurrenceOptions[i].active ?
+                <div className="clearfix well-sm">
+                  {eventsOccurrenceOptions.occurrenceOptions[i].title}
+                  <Button className="btn-sm pull-right" onClick={() => this.handleRemoveOption(eventsOccurrenceOptions.occurrenceOptions[i].title)}>Remove</Button>
+                </div>
+                :
+                ''
+              }
+            </div>
+            ))
         }
+
+        <h4>Inactive Options</h4>
+        {
+
+Object.keys(eventsOccurrenceOptions.occurrenceOptions).map(i => (
+  <div key={i}>
+    {eventsOccurrenceOptions.occurrenceOptions[i].active === false ?
+      <div className="clearfix well-sm">
+        {eventsOccurrenceOptions.occurrenceOptions[i].title}
+        <Button className="btn-sm pull-right" onClick={() => this.handleReactivateOption(eventsOccurrenceOptions.occurrenceOptions[i].title)}>Activate</Button>
+      </div>
+      :
+      ''
+    }
+  </div>
+  ))
+}
 
       </form>
 
@@ -96,7 +135,7 @@ class EventOccurrenceOptions extends React.Component {
 
 
 export default withTracker((eventId) => {
-  const subscription = Meteor.subscribe('eventoccurrence.view', eventId.eventId);
+  const subscription = Meteor.subscribe('event.view', eventId.eventId);
   // console.log('event id is', eventId.eventId);
   return {
     loading: !subscription.ready(),

@@ -5,7 +5,9 @@ import PropTypes from 'prop-types';
 import { FormGroup, ControlLabel, Button } from 'react-bootstrap';
 import { Meteor } from 'meteor/meteor';
 import { Bert } from 'meteor/themeteorchef:bert';
+import Swipeable from 'react-swipeable';
 import validate from '../../../modules/validate';
+
 
 class EventOccurrenceEditor extends React.Component {
   componentDidMount() {
@@ -19,6 +21,13 @@ class EventOccurrenceEditor extends React.Component {
       },
       submitHandler() { component.handleSubmit(component.form); },
     });
+  }
+
+  swipedLeft() {
+    console.log('You swiped to the Left...');
+  }
+  swipedRight() {
+    console.log('You swiped to the the Right...');
   }
 
   handleSubmit(form) {
@@ -52,9 +61,17 @@ class EventOccurrenceEditor extends React.Component {
     const { occurrence } = this.props;
     return (
       <form ref={form => (this.form = form)} onSubmit={event => event.preventDefault()}>
-        <div>
-		  here, build the list of occurrence options for this event and give them checkboxes next to each
-        </div>
+        <Swipeable
+          onSwipedLeft={this.swipedLeft}
+          onSwipedRight={this.swipedRight}
+
+        >
+
+          <div>
+            Swipe left/right to page between occurrences.
+            here, build the list of occurrence options for this event and give them checkboxes next to each.
+          </div>
+        </Swipeable>
         <Button type="submit" bsStyle="success">
           {occurrence && occurrence._id ? 'Save Changes' : 'Add Occurrence'}
         </Button>
