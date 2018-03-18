@@ -87,6 +87,6 @@ export default withTracker(() => {
   const subscription = Meteor.subscribe('events');
   return {
     loading: !subscription.ready(),
-    events: EventsCollection.find().fetch(),
+    events: EventsCollection.find({}, { sort: { createdAt: -1 } }).fetch(),
   };
 })(Events);
