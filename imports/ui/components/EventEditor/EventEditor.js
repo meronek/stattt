@@ -37,7 +37,7 @@ class EventEditor extends React.Component {
 
     Meteor.call(methodToCall, event, (error, eventId) => {
       if (error) {
-        Bert.alert(`fuckkkkk${error.reason}`, 'danger');
+        Bert.alert(error.reason, 'danger');
       } else {
         const confirmation = existingEvent ? 'Event updated!' : 'Event added!';
         this.form.reset();

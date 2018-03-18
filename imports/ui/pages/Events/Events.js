@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
-import { Table, Alert, Button } from 'react-bootstrap';
+import { Well, Alert, Button, Row, Col } from 'react-bootstrap';
 import { Meteor } from 'meteor/meteor';
 import { withTracker } from 'meteor/react-meteor-data';
 import { Bert } from 'meteor/themeteorchef:bert';
@@ -32,53 +32,46 @@ const Events = ({
       <Link className="btn btn-success pull-right" to={`${match.url}/new`}>Add Event</Link>
     </div>
     {events.length ?
-      <Table responsive>
-        <thead>
-          <tr>
-            <th>Title</th>
-            <th>Created</th>
-            <th />
-            <th />
-          </tr>
-        </thead>
-        <tbody>
-          {events.map(({
+          events.map(({
             _id, title, createdAt,
           }) => (
-            <tr key={_id}>
-              <td>{title}</td>
-              <td>{monthDayYearAtTime(createdAt)}</td>
-              <td>
-                <Button
-                  bsStyle="primary"
-                  onClick={() => history.push(`${match.url}/log/${_id}`)}
-                  block
-                >
-                  Log Occurrences
-                </Button>
-              </td>
-              <td>
-                <Button
-                  bsStyle="primary"
-                  onClick={() => history.push(`${match.url}/${_id}`)}
-                  block
-                >
+            <Well key={_id}>
+              <Row>
+                <Col sm={12}>{title}<br />{monthDayYearAtTime(createdAt)}
+                </Col>
+              </Row>
+              <Row>
+                <Col xs={4}>
+                  <Button
+                    bsStyle="primary"
+                    onClick={() => history.push(`${match.url}/log/${_id}`)}
+                    block
+                  >
+                  Log
+                  </Button>
+                </Col>
+                <Col xs={4}>
+                  <Button
+                    bsStyle="primary"
+                    onClick={() => history.push(`${match.url}/${_id}`)}
+                    block
+                  >
                   Options
-                </Button>
-              </td>
-              <td>
-                <Button
-                  bsStyle="danger"
-                  onClick={() => handleRemove(_id)}
-                  block
-                >
+                  </Button>
+                </Col>
+                <Col xs={4}>
+                  <Button
+                    bsStyle="danger"
+                    onClick={() => handleRemove(_id)}
+                    block
+                  >
                   Delete
-                </Button>
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </Table> : <Alert bsStyle="warning">No events yet!</Alert>}
+                  </Button>
+                </Col>
+              </Row>
+            </Well>
+          ))
+         : <Alert bsStyle="warning">No events yet!</Alert>}
   </div>
 ) : <Loading />);
 
