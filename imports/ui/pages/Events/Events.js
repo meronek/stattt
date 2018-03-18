@@ -33,11 +33,12 @@ const Events = ({
     </div>
     {events.length ?
           events.map(({
-            _id, title, createdAt,
+            _id, title, createdAt, occurrenceOptions,
           }) => (
             <Well key={_id}>
               <Row>
-                <Col sm={12}>{title}<br />{monthDayYearAtTime(createdAt)}
+                <Col sm={12}>{title} ({occurrenceOptions.filter(occurrenceOptions => occurrenceOptions.active === true).length} {occurrenceOptions.filter(occurrenceOptions => occurrenceOptions.active === true).length === 1 ? 'Option' : 'Options'})
+                  <br />{monthDayYearAtTime(createdAt)}
                 </Col>
               </Row>
               <Row>
