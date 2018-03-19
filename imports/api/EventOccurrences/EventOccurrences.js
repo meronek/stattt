@@ -41,6 +41,14 @@ EventOccurrences.schema = new SimpleSchema({
       if (this.isInsert || this.isUpdate) return (new Date()).toISOString();
     },
   },
+  title:
+  {
+    // this will default in the UI to the number of event occurrences plus 1
+    // so, all your instances can have actual values/titles or just simply be numbered 1, 2, 3, etc
+    type: String,
+    label: 'The name of this occurrence instance.',
+    optional: true,
+  },
   occurrenceItems: {
     type: Array,
     label: 'The things that are being logged for this occurrence.',

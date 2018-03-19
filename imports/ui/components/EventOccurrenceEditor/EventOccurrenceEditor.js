@@ -2,7 +2,7 @@
 
 import React from 'react';
 import PropTypes from 'prop-types';
-import { FormGroup, ControlLabel, Button } from 'react-bootstrap';
+import { Row, Col, Button } from 'react-bootstrap';
 import { Meteor } from 'meteor/meteor';
 import { Bert } from 'meteor/themeteorchef:bert';
 import Swipeable from 'react-swipeable';
@@ -24,10 +24,13 @@ class EventOccurrenceEditor extends React.Component {
   }
 
   swipedLeft() {
-    console.log('You swiped to the Left...');
+    console.log('You swiped to the Left...IF they are on the entry page, move them to the most recent record, basically, like previous');
   }
   swipedRight() {
-    console.log('You swiped to the the Right...');
+    console.log('You swiped to the the Right...move them to the first record, basically like next when you are at the end of the record list');
+  }
+  swipedUp() {
+    console.log('You swiped Up...move them to the new occurrence form.');
   }
 
   handleSubmit(form) {
@@ -64,14 +67,27 @@ class EventOccurrenceEditor extends React.Component {
         <Swipeable
           onSwipedLeft={this.swipedLeft}
           onSwipedRight={this.swipedRight}
-
+          onSwipedUp={this.swipedUp}
         >
 
-          <div>
-            Swipe left/right to page between occurrences.
-            here, build the list of occurrence options for this event and give them checkboxes next to each.
-          </div>
+          <Row>
+            <Col xs={12} className="text-center">
+              <h4>Start Logging</h4>
+            </Col>
+            <Col xs={4} className="text-center">
+              Swipe Up:<br />New
+            </Col>
+            <Col xs={4} className="text-center">
+              Swipe Right:<br />View Last
+            </Col>
+            <Col xs={4} className="text-center">
+              Swipe Left:<br />View First
+            </Col>
+            
+            
+          </Row>
         </Swipeable>
+        here, build the list of occurrence options for this event and give them checkboxes next to each.
         <Button type="submit" bsStyle="success">
           {occurrence && occurrence._id ? 'Save Changes' : 'Add Occurrence'}
         </Button>
