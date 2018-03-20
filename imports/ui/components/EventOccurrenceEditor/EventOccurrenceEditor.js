@@ -12,18 +12,33 @@ import Events from '../../../api/Events/Events';
 
 
 class EventOccurrenceEditor extends React.Component {
-  componentDidMount() {
-    const component = this;
-    validate(component.form, {
-      rules: {
+  constructor(props) {
+    super(props);
 
-      },
-      messages: {
+    this.state = {
+      entryPage: true,
+      checked: false,
+    };
 
-      },
-      submitHandler() { component.handleSubmit(component.form); },
-    });
+    this.handleCheck = this.handleCheck.bind(this);
   }
+
+  handleCheck() {
+    this.setState({ checked: !this.state.checked });
+  }
+
+  // componentDidMount() {
+  //   const component = this;
+  //   validate(component.form, {
+  //     rules: {
+
+  //     },
+  //     messages: {
+
+  //     },
+  //     submitHandler() { component.handleSubmit(component.form); },
+  //   });
+  // }
 
   swipedLeft() {
     console.log('You swiped to the Left...IF they are on the entry page, move them to the most recent record, basically, like previous');
@@ -86,23 +101,29 @@ class EventOccurrenceEditor extends React.Component {
           onSwipedRight={this.swipedRight}
         >
 
+        got occurrence options listed
+        now how to handle new item?
+        if there's no EventOccurrences._id then this must be a new instance. create new instance as soon as someone checks an item?
+        store that id on state?
+        how can I number each instance sequential? and set that as default title rather than crazy date/time stamp?
+
 
           {this.props.eventsOccurrenceOptions ?
             <ListGroup>
-              {console.log('this.props.eventsOccurrenceOptions.occurrenceOptions is', this.props.eventsOccurrenceOptions.occurrenceOptions)}
               {this.props.eventsOccurrenceOptions.occurrenceOptions.map((option) => {
-                const { title } = option;
+                const { title, active } = option;
               return (
-                <ListGroupItem key={title}>
-                  <Checkbox defaultChecked={false}>{title}</Checkbox>
-                </ListGroupItem>
+                active ?
+                  <ListGroupItem key={title}>
+                    <Checkbox defaultChecked={false} onChange={this.handleCheck}>{title}</Checkbox>
+                  </ListGroupItem>
+                : ''
               );
               })}
             </ListGroup>
         : []}
 
         </Swipeable>
-        here, build the list of occurrence options for this event and give them checkboxes next to each.
 
 
       </form>
