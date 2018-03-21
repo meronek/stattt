@@ -8,6 +8,7 @@ import { Bert } from 'meteor/themeteorchef:bert';
 import { withTracker } from 'meteor/react-meteor-data';
 import Swipeable from 'react-swipeable';
 import Events from '../../../api/Events/Events';
+import EventOccurrences from '../../../api/EventOccurrences/EventOccurrences';
 import CheckboxOrRadioGroup from '../CheckboxOrRadioGroup/CheckboxOrRadioGroup';
 
 
@@ -34,24 +35,40 @@ class EventOccurrenceEditor extends React.Component {
     }
     // set the occurences - is this a new one or existing?
     this.setState({ selectedOccurrences: newSelectionArray });
+    const occurrence = {
+      eventId: this.props.eventId,
+      title: 'how the fuck do I generate this',
+      occurrenceItems: newSelectionArray,
+    };
+
     if (this.state.existingEventOccurrenceId) {
+      console.log('occurrance is ', occurrence);
       console.log('update existing EventOccurrenceId ', this.state.existingEventOccurrenceId);
-    } else {
-      const occurrence = {
-        eventId: this.props.eventId,
-        title: 'how the fuck do I generate this',
-        occurrenceItems: newSelectionArray,
-      };
-      console.log('create a  new event occurrence', occurrence);
-      Meteor.call('eventOccurrence.insert', occurrence, (error) => {
+
+      occurrence._id = this.state.existingEventOccurrenceId;
+
+      Meteor.call('eventOccurrence.update', occurrence, (error) => {
         if (error) {
           Bert.alert(`Error: ${error.reason}`, 'danger');
+          console.log('occurrence inside error is now', occurrence);
+          // console.log('occurrence in the error is ', occurrence);
+        } else {
+          // anything to do here? not really
+        }
+      });
+    } else {
+      // console.log('create a  new event occurrence', occurrence);
+      Meteor.call('eventOccurrence.insert', occurrence, (error, occurrenceId) => {
+        if (error) {
+          Bert.alert(`Error: ${error.reason}`, 'danger');
+          // console.log('occurrence in the error is ', occurrence);
         } else {
           // during testing, classic add button here, but final will be add on swipe away
-          const confirmation = `Occurrence instance created: ${occurrence._id}`;
+          // const confirmation = `Occurrence instance created: ${occurrence._id}`;
           // this.form.reset();
-          Bert.alert(confirmation, 'success');
-          this.setState({ existingEventOccurrenceId: occurrence._id });
+          // Bert.alert(confirmation, 'success');
+          this.setState({ existingEventOccurrenceId: occurrenceId });
+          // console.log('id is ', occurrenceId);
           // not sending them anywhere on save
           // history.push(`/documents/${documentId}`);
         }

@@ -4,7 +4,7 @@ import './CheckboxOrRadioGroup.css';
 
 const CheckboxOrRadioGroup = props => (
   <div>
-    <label className="form-label">{props.title}</label>
+    <p>{props.title}</p>
     <div className="checkbox-group">
       {props.options.map(opt => (
         <label key={opt} className="checkboxlabel">

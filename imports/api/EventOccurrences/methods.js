@@ -1,6 +1,6 @@
 import { Meteor } from 'meteor/meteor';
 import { check } from 'meteor/check';
-import EventsOccurrences from './EventsOccurrences';
+import EventOccurrences from './EventOccurrences';
 import handleMethodException from '../../modules/handle-method-exception';
 import rateLimit from '../../modules/rate-limit';
 
@@ -9,23 +9,26 @@ Meteor.methods({
     check(occurrence, {
       eventId: String,
       occurrenceItems: Array,
+      title: String,
     });
-
+    // console.log('on the server, occurrence is', occurrence);
     try {
-      return EventsOccurrences.insert({ owner: this.userId, ...occurrence });
+      return EventOccurrences.insert({ owner: this.userId, ...occurrence });
     } catch (exception) {
       handleMethodException(exception);
     }
   },
   'eventOccurrence.update': function eventOccurrenceUpdate(occurrence) {
+    console.log('occurrence on the server is', occurrence._id);
     check(occurrence, {
       _id: String,
       eventId: String,
       occurrenceItems: Array,
+      title: String,
     });
 
     try {
-      return EventsOccurrences.update({ owner: this.userId, ...occurrence });
+      return EventOccurrences.update({ occurrence });
     } catch (exception) {
       handleMethodException(exception);
     }
@@ -34,7 +37,7 @@ Meteor.methods({
     check(occurrence, { _id: String });
 
     try {
-      return EventsOccurrences.remove(occurrence);
+      return EventOccurrences.remove(occurrence);
     } catch (exception) {
       handleMethodException(exception);
     }
