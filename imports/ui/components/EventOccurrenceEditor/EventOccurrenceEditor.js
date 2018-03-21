@@ -2,14 +2,13 @@
 
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Row, Col, ListGroup, ListGroupItem } from 'react-bootstrap';
+import { Row, Col } from 'react-bootstrap';
 import { Meteor } from 'meteor/meteor';
 import { Bert } from 'meteor/themeteorchef:bert';
 import { withTracker } from 'meteor/react-meteor-data';
 import Swipeable from 'react-swipeable';
-import { Checkbox, CheckboxGroup } from 'react-checkbox-group';
-import validate from '../../../modules/validate';
 import Events from '../../../api/Events/Events';
+import CheckboxOrRadioGroup from '../CheckboxOrRadioGroup/CheckboxOrRadioGroup';
 
 
 class EventOccurrenceEditor extends React.Component {
@@ -17,67 +16,52 @@ class EventOccurrenceEditor extends React.Component {
     super(props);
 
     this.state = {
-      entryPage: true, // if they're on the entry page, left and right swipe acts a certain way
-      editMode: false, // determine if it's a new record or existing record
-      instanceID: '', // record _id of this instance from the EventOccurrences collection
-      occurrenceItems: [], // array of chosen occurrence items for this occurrence
+      eventId: this.props.eventId,
+      selectedOccurrences: [],
     };
 
-    this.handleCheck = this.handleCheck.bind(this);
+    this.handleOccurrenceSelection = this.handleOccurrenceSelection.bind(this);
   }
 
-  handleCheck(newValues) {
-    console.log('event id is', this.props.eventId, 'newValues is ', newValues);
+  handleOccurrenceSelection(e) {
+    const newSelection = e.target.value;
+    let newSelectionArray;
 
-    // how the fuck to determine if the checkbox was checked or not?
-    // also, figure out how not to double up on values added here:
-    this.state.occurrenceItems.push(newValues);
-
-    const occurrence = {
-      eventId: this.props.eventId,
-      // save all the checked items into the occurrenceItems array here...
-      // title: form.title.value.trim(),
-      // body: form.body.value.trim(),
-      occurrenceItems: this.state.occurrenceItems,
-    };
-    // so, if we're in edit mode, we're updating the instanceID, otherwise, we're creating a new instance
-    if (this.state.editMode) {
-      // update instance
-      console.log('update existing instance: ', occurrence);
+    if (this.state.selectedOccurrences.indexOf(newSelection) > -1) {
+      newSelectionArray = this.state.selectedOccurrences.filter(s => s !== newSelection);
     } else {
-      // new instance
-      console.log('log new instance: ', occurrence);
-      // Meteor.call(eventOccurrence.insert, occurrence, (error) => {
-      //   if (error) {
-      //     Bert.alert(error.reason, 'danger');
-      //   } else {
-      //     // during testing, classic add button here, but final will be add on swipe away
-      //     const confirmation = existingOccurrence ? 'Occurrence updated!' : 'Occurrence added!';
-      //     // not resetting the form:
-      //     // this.form.reset();
-      //     Bert.alert(confirmation, 'success');
-      //     // not sending them anywhere on save
-      //     // history.push(`/documents/${documentId}`);
-      //   }
-      // });
+      newSelectionArray = [...this.state.selectedOccurrences, newSelection];
+    }
+    // set the occurences - is this a new one or existing?
+    this.setState({ selectedOccurrences: newSelectionArray });
+    if (this.state.existingEventOccurrenceId) {
+      console.log('update existing EventOccurrenceId ', this.state.existingEventOccurrenceId);
+    } else {
+      const occurrence = {
+        eventId: this.props.eventId,
+        title: 'how the fuck do I generate this',
+        occurrenceItems: newSelectionArray,
+      };
+      console.log('create a  new event occurrence', occurrence);
+      Meteor.call('eventOccurrence.insert', occurrence, (error) => {
+        if (error) {
+          Bert.alert(`Error: ${error.reason}`, 'danger');
+        } else {
+          // during testing, classic add button here, but final will be add on swipe away
+          const confirmation = `Occurrence instance created: ${occurrence._id}`;
+          // this.form.reset();
+          Bert.alert(confirmation, 'success');
+          this.setState({ existingEventOccurrenceId: occurrence._id });
+          // not sending them anywhere on save
+          // history.push(`/documents/${documentId}`);
+        }
+      });
     }
   }
 
-  // componentDidMount() {
-  //   const component = this;
-  //   validate(component.form, {
-  //     rules: {
-
-  //     },
-  //     messages: {
-
-  //     },
-  //     submitHandler() { component.handleSubmit(component.form); },
-  //   });
-  // }
 
   swipedLeft() {
-    console.log('You swiped to the Left...IF they are on the entry page, move them to the most recent record, basically, like previous');
+    console.log('You swiped to the Left...IF they are on the entry page, move them to the most recent record, basically, like previous. ');
   }
   swipedRight() {
     console.log('You swiped to the the Right...move them to the first record, basically like next when you are at the end of the record list');
@@ -120,22 +104,17 @@ class EventOccurrenceEditor extends React.Component {
 
           {this.props.eventsOccurrenceOptions ?
             <div>
-              {this.props.eventsOccurrenceOptions.occurrenceOptions.map((option) => {
-                const { title, active } = option;
-              return (
-                active ?
-                  <CheckboxGroup
-                    name="occurrenceItems"
-                    value={this.state.occurrenceItems}
-                    onChange={this.handleCheck}
-                  >
-                    <Checkbox value={title} /> <label htmlFor={title}>{title}</label>
-                  </CheckboxGroup>
-                : ''
-              );
-              })}
+              <CheckboxOrRadioGroup
+                title="Check all that apply:"
+                setName="occurences"
+                type="checkbox"
+                controlFunc={this.handleOccurrenceSelection}
+                options={this.props.eventsOccurrenceOptions.occurrenceOptions.map(opt => opt.title)}
+                selectedOptions={this.state.selectedOccurrences}
+              />
             </div>
-        : []}
+        : ''}
+
 
         </Swipeable>
 
@@ -146,12 +125,12 @@ class EventOccurrenceEditor extends React.Component {
 }
 
 EventOccurrenceEditor.defaultProps = {
-  occurrence: { occurrenceItems: {} },
+  occurrenceOptions: [],
 };
 
 EventOccurrenceEditor.propTypes = {
-  occurrence: PropTypes.object,
-  history: PropTypes.object.isRequired,
+  occurrenceOptions: PropTypes.array,
+  eventsOccurrenceOptions: PropTypes.object,
 };
 
 

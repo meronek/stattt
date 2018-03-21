@@ -7,8 +7,8 @@ import rateLimit from '../../modules/rate-limit';
 Meteor.methods({
   'eventOccurrence.insert': function eventOccurrenceInsert(occurrence) {
     check(occurrence, {
-	  eventId: String,
-	  occurrenceItems: Array,
+      eventId: String,
+      occurrenceItems: Array,
     });
 
     try {
@@ -20,15 +20,15 @@ Meteor.methods({
   'eventOccurrence.update': function eventOccurrenceUpdate(occurrence) {
     check(occurrence, {
       _id: String,
-	  eventId: String,
-	  occurrenceItems: Array,
+      eventId: String,
+      occurrenceItems: Array,
     });
 
     try {
       return EventsOccurrences.update({ owner: this.userId, ...occurrence });
-	  } catch (exception) {
+    } catch (exception) {
       handleMethodException(exception);
-	  }
+    }
   },
   'eventOccurrence.remove': function eventOccurrenceRemove(occurrence) {
     check(occurrence, { _id: String });
