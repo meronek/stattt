@@ -2,11 +2,12 @@
 
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Row, Col, Button, Checkbox, ListGroup, ListGroupItem } from 'react-bootstrap';
+import { Row, Col, ListGroup, ListGroupItem } from 'react-bootstrap';
 import { Meteor } from 'meteor/meteor';
 import { Bert } from 'meteor/themeteorchef:bert';
 import { withTracker } from 'meteor/react-meteor-data';
 import Swipeable from 'react-swipeable';
+import { Checkbox, CheckboxGroup } from 'react-checkbox-group';
 import validate from '../../../modules/validate';
 import Events from '../../../api/Events/Events';
 
@@ -16,15 +17,50 @@ class EventOccurrenceEditor extends React.Component {
     super(props);
 
     this.state = {
-      entryPage: true,
-      checked: false,
+      entryPage: true, // if they're on the entry page, left and right swipe acts a certain way
+      editMode: false, // determine if it's a new record or existing record
+      instanceID: '', // record _id of this instance from the EventOccurrences collection
+      occurrenceItems: [], // array of chosen occurrence items for this occurrence
     };
 
     this.handleCheck = this.handleCheck.bind(this);
   }
 
-  handleCheck() {
-    this.setState({ checked: !this.state.checked });
+  handleCheck(newValues) {
+    console.log('event id is', this.props.eventId, 'newValues is ', newValues);
+
+    // how the fuck to determine if the checkbox was checked or not?
+    // also, figure out how not to double up on values added here:
+    this.state.occurrenceItems.push(newValues);
+
+    const occurrence = {
+      eventId: this.props.eventId,
+      // save all the checked items into the occurrenceItems array here...
+      // title: form.title.value.trim(),
+      // body: form.body.value.trim(),
+      occurrenceItems: this.state.occurrenceItems,
+    };
+    // so, if we're in edit mode, we're updating the instanceID, otherwise, we're creating a new instance
+    if (this.state.editMode) {
+      // update instance
+      console.log('update existing instance: ', occurrence);
+    } else {
+      // new instance
+      console.log('log new instance: ', occurrence);
+      // Meteor.call(eventOccurrence.insert, occurrence, (error) => {
+      //   if (error) {
+      //     Bert.alert(error.reason, 'danger');
+      //   } else {
+      //     // during testing, classic add button here, but final will be add on swipe away
+      //     const confirmation = existingOccurrence ? 'Occurrence updated!' : 'Occurrence added!';
+      //     // not resetting the form:
+      //     // this.form.reset();
+      //     Bert.alert(confirmation, 'success');
+      //     // not sending them anywhere on save
+      //     // history.push(`/documents/${documentId}`);
+      //   }
+      // });
+    }
   }
 
   // componentDidMount() {
@@ -47,32 +83,6 @@ class EventOccurrenceEditor extends React.Component {
     console.log('You swiped to the the Right...move them to the first record, basically like next when you are at the end of the record list');
   }
 
-  handleSubmit(form) {
-    const { history } = this.props;
-    const existingOccurrence = this.props.occurrence && this.props.occurrence._id;
-    const methodToCall = existingOccurrence ? 'eventoccurances.update' : 'eventoccurances.insert';
-    const occurrence = {
-	  // save all the checked items into the occurrenceItems array here...
-	  // title: form.title.value.trim(),
-    // body: form.body.value.trim(),
-    };
-
-    if (existingOccurrence) occurrence._id = existingOccurrence;
-
-    Meteor.call(methodToCall, occurrence, (error) => {
-      if (error) {
-        Bert.alert(error.reason, 'danger');
-      } else {
-        // during testing, classic add button here, but final will be add on swipe away
-        const confirmation = existingOccurrence ? 'Occurrence updated!' : 'Occurrence added!';
-        // not resetting the form:
-        // this.form.reset();
-        Bert.alert(confirmation, 'success');
-        // not sending them anywhere on save
-        // history.push(`/documents/${documentId}`);
-      }
-    });
-  }
 
   render() {
     // const { occurenceOptions } = this.props.eventsOccurrenceOptions;
@@ -109,18 +119,22 @@ class EventOccurrenceEditor extends React.Component {
 
 
           {this.props.eventsOccurrenceOptions ?
-            <ListGroup>
+            <div>
               {this.props.eventsOccurrenceOptions.occurrenceOptions.map((option) => {
                 const { title, active } = option;
               return (
                 active ?
-                  <ListGroupItem key={title}>
-                    <Checkbox defaultChecked={false} onChange={this.handleCheck}>{title}</Checkbox>
-                  </ListGroupItem>
+                  <CheckboxGroup
+                    name="occurrenceItems"
+                    value={this.state.occurrenceItems}
+                    onChange={this.handleCheck}
+                  >
+                    <Checkbox value={title} /> <label htmlFor={title}>{title}</label>
+                  </CheckboxGroup>
                 : ''
               );
               })}
-            </ListGroup>
+            </div>
         : []}
 
         </Swipeable>

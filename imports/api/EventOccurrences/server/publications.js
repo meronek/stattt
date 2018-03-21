@@ -6,6 +6,8 @@ Meteor.publish('eventoccurrences', function eventoccurrences() {
   return EventOccurrences.find({ eventId: this.eventId, owner: this.userId });
 });
 
+Meteor.publish('eventoccurrencesinstance', _id => EventOccurrences.find({ _id }));
+
 // Note: documents.view is also used when editing an existing document.
 Meteor.publish('eventoccurrences.view', function eventoccurrencesView(eventId) {
   check(eventId, String);
