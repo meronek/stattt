@@ -11,7 +11,11 @@ import Events from '../../../api/Events/Events';
 import EventOccurrences from '../../../api/EventOccurrences/EventOccurrences';
 import CheckboxOrRadioGroup from '../CheckboxOrRadioGroup/CheckboxOrRadioGroup';
 
-
+function toObject(arr) {
+  const rv = {};
+  for (let i = 0; i < arr.length; ++i) { rv[i] = arr[i]; }
+  return rv;
+}
 class EventOccurrenceEditor extends React.Component {
   constructor(props) {
     super(props);
@@ -39,19 +43,24 @@ class EventOccurrenceEditor extends React.Component {
     const occurrence = {
       eventId: this.props.eventId,
       title: 'how the fuck do I generate this',
-      occurrenceItems: Object.values(newSelectionArray),
+      occurrenceItems: [], // initially, leave blank, push and pull items as checkboxes are set
     };
 
+
+    // HOLY SHIT, FINALLY GOT THIS SAVING IN THERE CORRECTLY, NOW JUST NEED TO CHECK IF THE CHECKBOX WAS UNCHECKED, IF SO, REMOVE THE ITEM
+
+
     if (this.state.existingEventOccurrenceId) {
-      occurrence._id = this.state.existingEventOccurrenceId;
-      Meteor.call('eventOccurrence.update', occurrence, (error, whatthefuck) => {
+      // occurrence._id = this.state.existingEventOccurrenceId;
+      const options = {};
+      options._id = this.state.existingEventOccurrenceId;
+      options.title = newSelection;
+      Meteor.call('eventOccurrenceItem.insert', options, (error, returnvalue) => {
         if (error) {
           Bert.alert(`Error: ${error.reason}`, 'danger');
-          console.log('occurrence inside error is now', occurrence);
           // console.log('occurrence in the error is ', occurrence);
         } else {
-          // anything to do here? not really
-          console.log('well, something was updated. here is occurrence: ', occurrence, ' and this bullshit was reuturned whatthefuck', whatthefuck);
+          console.log('push done, returned', returnvalue);
         }
       });
     } else {
@@ -69,6 +78,20 @@ class EventOccurrenceEditor extends React.Component {
           // console.log('id is ', occurrenceId);
           // not sending them anywhere on save
           // history.push(`/documents/${documentId}`);
+
+          // now here, try to push item into list
+          const options = {};
+          options._id = occurrenceId;
+          console.log('this.state.occurrenceId is', occurrenceId);
+          options.title = newSelection;
+          Meteor.call('eventOccurrenceItem.insert', options, (deeperror, returnvalue) => {
+            if (error) {
+              Bert.alert(`Error: ${deeperror.reason}`, 'danger');
+              // console.log('occurrence in the error is ', occurrence);
+            } else {
+              console.log('push done, returned', returnvalue);
+            }
+          });
         }
       });
     }

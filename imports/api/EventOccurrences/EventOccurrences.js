@@ -52,11 +52,11 @@ EventOccurrences.schema = new SimpleSchema({
   occurrenceItems: {
     type: Array,
     defaultValue: [],
-    label: 'The things that are being logged for this occurrence.',
+    label: 'The outer array of things that are being logged for this occurrence.',
   },
   'occurrenceItems.$': {
     type: Object,
-    label: 'The list of occurrences for the event.',
+    label: 'The actual items list of occurrences for the event.',
   },
   'occurrenceItems.$.title': {
     type: String,

@@ -8,7 +8,7 @@ Meteor.methods({
   'eventOccurrence.insert': function eventOccurrenceInsert(occurrence) {
     check(occurrence, {
       eventId: String,
-      occurrenceItems: Object,
+      occurrenceItems: Array,
       title: String,
     });
     console.log('INSERT done on the server, occurrence is', occurrence);
@@ -18,6 +18,20 @@ Meteor.methods({
       handleMethodException(exception);
     }
   },
+
+  'eventOccurrenceItem.insert': function eventOccurrenceInsertItem(options) {
+    check(options, {
+      _id: String,
+      title: String,
+    });
+    console.log('option is', options);
+    return EventOccurrences.update(options._id, {
+      $addToSet: {
+        occurrenceItems: { title: options.title },
+      },
+    });
+  },
+
   'eventOccurrence.update': function eventOccurrenceUpdate(occurrence) {
     // console.log('occurrence on the server is', occurrence._id);
 
