@@ -8,6 +8,9 @@ import { Bert } from 'meteor/themeteorchef:bert';
 import { withTracker } from 'meteor/react-meteor-data';
 import Swipeable from 'react-swipeable';
 import Events from '../../../api/Events/Events';
+import EventOccurrences from '../../../api/EventOccurrences/EventOccurrences';
+
+
 import CheckboxOrRadioGroup from '../CheckboxOrRadioGroup/CheckboxOrRadioGroup';
 
 
@@ -27,6 +30,7 @@ class EventOccurrenceEditor extends React.Component {
     // for a new Occurrence, simply clear out state variable and checkboxes
     this.setState({ selectedOccurrences: [], existingEventOccurrenceId: null });
   }
+
 
   handleOccurrenceSelection(e) {
     const newSelection = e.target.value;
@@ -111,21 +115,20 @@ class EventOccurrenceEditor extends React.Component {
           onSwipedLeft={this.swipedLeft}
           onSwipedRight={this.swipedRight}
         >
-
-          <h2>Log Occurrence</h2>
-          <p>
-          Total Occurrences Logged: X
-          </p>
+          <h3>{this.props.eventsOccurrenceOptions ? this.props.eventsOccurrenceOptions.title : ''}</h3>
+          <h4>Log Occurrence: </h4>
 
           {this.props.eventsOccurrenceOptions ?
             <div>
               <CheckboxOrRadioGroup
-                title="Check all that apply:"
+                title="Check off what went down:"
                 setName="occurences"
                 type="checkbox"
                 controlFunc={this.handleOccurrenceSelection}
                 options={this.props.eventsOccurrenceOptions.occurrenceOptions.map(opt => (opt.active ? opt.title : '')).filter(title => title.length > 0)}
                 selectedOptions={this.state.selectedOccurrences}
+                allOccurrences={this.props.allOccurrences}
+                eventId={this.props.eventId}
               />
             </div>
         : ''}
@@ -134,10 +137,12 @@ class EventOccurrenceEditor extends React.Component {
             </Alert> : <Alert>Select options to log</Alert>}
           <ButtonToolbar>
             <Button className="btn btn-primary" onClick={this.newOccurrence}>New Occurrence</Button>
-            <Button className="btn btn-primary">View Occurrences</Button>
+
           </ButtonToolbar>
         </Swipeable>
 
+        <h3>{this.props.eventsOccurrenceOptions ? this.props.eventsOccurrenceOptions.title : ''}</h3>
+        <Button className="btn btn-primary">{this.props.totalOccurrencesLogged} {this.props.totalOccurrencesLogged === 1 ? 'Occurrence' : 'Occurences'}</Button>
 
       </form>
     );
@@ -161,11 +166,12 @@ export default withTracker((_id) => {
   const eventId = _id.history.location.pathname.split('/')[3];
   // console.log('eventId is ', eventId);
   const subscription = Meteor.subscribe('event.view', eventId);
-
   return {
     loading: !subscription.ready(),
     eventsOccurrenceOptions: Events.findOne(eventId),
     eventId,
+    totalOccurrencesLogged: EventOccurrences.find({ eventId }).fetch().length,
+    allOccurrences: EventOccurrences.find({ eventId }).fetch(),
   };
 })(EventOccurrenceEditor);
 
