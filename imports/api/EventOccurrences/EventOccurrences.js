@@ -48,9 +48,19 @@ EventOccurrences.schema = new SimpleSchema({
     type: String,
     label: 'The name of this occurrence instance.',
   },
+
   occurrenceItems: {
     type: Array,
+    defaultValue: [],
     label: 'The things that are being logged for this occurrence.',
+  },
+  'occurrenceItems.$': {
+    type: Object,
+    label: 'The list of occurrences for the event.',
+  },
+  'occurrenceItems.$.title': {
+    type: String,
+    label: 'The title of the occurrence.',
   },
 });
 

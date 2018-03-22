@@ -24,6 +24,7 @@ class EventOccurrenceEditor extends React.Component {
     this.handleOccurrenceSelection = this.handleOccurrenceSelection.bind(this);
   }
 
+
   handleOccurrenceSelection(e) {
     const newSelection = e.target.value;
     let newSelectionArray;
@@ -38,22 +39,19 @@ class EventOccurrenceEditor extends React.Component {
     const occurrence = {
       eventId: this.props.eventId,
       title: 'how the fuck do I generate this',
-      occurrenceItems: newSelectionArray,
+      occurrenceItems: Object.values(newSelectionArray),
     };
 
     if (this.state.existingEventOccurrenceId) {
-      console.log('occurrance is ', occurrence);
-      console.log('update existing EventOccurrenceId ', this.state.existingEventOccurrenceId);
-
       occurrence._id = this.state.existingEventOccurrenceId;
-
-      Meteor.call('eventOccurrence.update', occurrence, (error) => {
+      Meteor.call('eventOccurrence.update', occurrence, (error, whatthefuck) => {
         if (error) {
           Bert.alert(`Error: ${error.reason}`, 'danger');
           console.log('occurrence inside error is now', occurrence);
           // console.log('occurrence in the error is ', occurrence);
         } else {
           // anything to do here? not really
+          console.log('well, something was updated. here is occurrence: ', occurrence, ' and this bullshit was reuturned whatthefuck', whatthefuck);
         }
       });
     } else {
