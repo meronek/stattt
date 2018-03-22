@@ -24,9 +24,21 @@ Meteor.methods({
       _id: String,
       title: String,
     });
-    console.log('option is', options);
     return EventOccurrences.update(options._id, {
+      updatedAt: (new Date()).toISOString(),
       $addToSet: {
+        occurrenceItems: { title: options.title },
+      },
+    });
+  },
+
+  'eventOccurrenceItem.remove': function eventOccurrenceInsertItem(options) {
+    check(options, {
+      _id: String,
+      title: String,
+    });
+    return EventOccurrences.update(options._id, {
+      $pull: {
         occurrenceItems: { title: options.title },
       },
     });

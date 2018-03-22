@@ -49,47 +49,45 @@ class EventOccurrenceEditor extends React.Component {
 
     // HOLY SHIT, FINALLY GOT THIS SAVING IN THERE CORRECTLY, NOW JUST NEED TO CHECK IF THE CHECKBOX WAS UNCHECKED, IF SO, REMOVE THE ITEM
 
+    // this if means it's in there already, so we're removing it:
+    let methodToCall = 'eventOccurrenceItem.insert';
+    if (this.state.selectedOccurrences.indexOf(newSelection) > -1) {
+      methodToCall = 'eventOccurrenceItem.remove';
+    }
 
     if (this.state.existingEventOccurrenceId) {
       // occurrence._id = this.state.existingEventOccurrenceId;
       const options = {};
       options._id = this.state.existingEventOccurrenceId;
       options.title = newSelection;
-      Meteor.call('eventOccurrenceItem.insert', options, (error, returnvalue) => {
+      Meteor.call(methodToCall, options, (error) => {
         if (error) {
           Bert.alert(`Error: ${error.reason}`, 'danger');
           // console.log('occurrence in the error is ', occurrence);
         } else {
-          console.log('push done, returned', returnvalue);
+          // skip alert, it's saved, nothing to do here
         }
       });
     } else {
-      // console.log('create a  new event occurrence', occurrence);
+      // if we don't have an existing eventoccurrence, first we need to create one:
       Meteor.call('eventOccurrence.insert', occurrence, (error, occurrenceId) => {
         if (error) {
           Bert.alert(`Error: ${error.reason}`, 'danger');
-          // console.log('occurrence in the error is ', occurrence);
         } else {
-          // during testing, classic add button here, but final will be add on swipe away
-          // const confirmation = `Occurrence instance created: ${occurrence._id}`;
-          // this.form.reset();
-          // Bert.alert(confirmation, 'success');
+          // after we create it, set the id of this occurrence:
           this.setState({ existingEventOccurrenceId: occurrenceId });
-          // console.log('id is ', occurrenceId);
-          // not sending them anywhere on save
-          // history.push(`/documents/${documentId}`);
+          // now here, handle updating the list
+          // here, determine if it's checked or unchecked
 
-          // now here, try to push item into list
           const options = {};
           options._id = occurrenceId;
-          console.log('this.state.occurrenceId is', occurrenceId);
           options.title = newSelection;
-          Meteor.call('eventOccurrenceItem.insert', options, (deeperror, returnvalue) => {
+          Meteor.call(methodToCall, options, (deeperror) => {
             if (error) {
               Bert.alert(`Error: ${deeperror.reason}`, 'danger');
               // console.log('occurrence in the error is ', occurrence);
             } else {
-              console.log('push done, returned', returnvalue);
+              // console.log('method called is', methodToCall, 'push done, returned', returnvalue);
             }
           });
         }
