@@ -4,6 +4,9 @@ import '../../api/Documents/server/publications';
 import '../../api/Events/server/indexes';
 import '../../api/Events/server/publications';
 
+import '../../api/EventOccurrences/server/indexes';
+import '../../api/EventOccurrences/server/publications';
+import '../../api/EventOccurrences/methods';
 
 import '../../api/OAuth/server/methods';
 
