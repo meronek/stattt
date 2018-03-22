@@ -2,32 +2,31 @@
 
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Row, Col } from 'react-bootstrap';
+import { Button, Alert, ButtonToolbar } from 'react-bootstrap';
 import { Meteor } from 'meteor/meteor';
 import { Bert } from 'meteor/themeteorchef:bert';
 import { withTracker } from 'meteor/react-meteor-data';
 import Swipeable from 'react-swipeable';
 import Events from '../../../api/Events/Events';
-import EventOccurrences from '../../../api/EventOccurrences/EventOccurrences';
 import CheckboxOrRadioGroup from '../CheckboxOrRadioGroup/CheckboxOrRadioGroup';
 
-function toObject(arr) {
-  const rv = {};
-  for (let i = 0; i < arr.length; ++i) { rv[i] = arr[i]; }
-  return rv;
-}
+
 class EventOccurrenceEditor extends React.Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      eventId: this.props.eventId,
       selectedOccurrences: [],
     };
 
     this.handleOccurrenceSelection = this.handleOccurrenceSelection.bind(this);
+    this.newOccurrence = this.newOccurrence.bind(this);
   }
 
+  newOccurrence() {
+    // for a new Occurrence, simply clear out state variable and checkboxes
+    this.setState({ selectedOccurrences: [], existingEventOccurrenceId: null });
+  }
 
   handleOccurrenceSelection(e) {
     const newSelection = e.target.value;
@@ -42,7 +41,7 @@ class EventOccurrenceEditor extends React.Component {
     this.setState({ selectedOccurrences: newSelectionArray });
     const occurrence = {
       eventId: this.props.eventId,
-      title: 'how the fuck do I generate this',
+      title: 'Not used right now.',
       occurrenceItems: [], // initially, leave blank, push and pull items as checkboxes are set
     };
 
@@ -97,10 +96,10 @@ class EventOccurrenceEditor extends React.Component {
 
 
   swipedLeft() {
-    console.log('You swiped to the Left...IF they are on the entry page, move them to the most recent record, basically, like previous. ');
+    // console.log('You swiped to the Left...IF they are on the entry page, move them to the most recent record, basically, like previous. ');
   }
   swipedRight() {
-    console.log('You swiped to the the Right...move them to the first record, basically like next when you are at the end of the record list');
+    // console.log('You swiped to the the Right...move them to the first record, basically like next when you are at the end of the record list');
   }
 
 
@@ -108,35 +107,15 @@ class EventOccurrenceEditor extends React.Component {
     // const { occurenceOptions } = this.props.eventsOccurrenceOptions;
     return (
       <form ref={form => (this.form = form)} onSubmit={event => event.preventDefault()}>
-
-
-        <Row>
-          <Col xs={12} className="text-center">
-            <h4>Start Logging</h4>
-          </Col>
-          <Col xs={4} className="text-center">
-              Swipe Up:<br />New
-          </Col>
-          <Col xs={4} className="text-center">
-              Swipe Right:<br />View Last
-          </Col>
-          <Col xs={4} className="text-center">
-              Swipe Left:<br />View First
-          </Col>
-        </Row>
-
-
         <Swipeable
           onSwipedLeft={this.swipedLeft}
           onSwipedRight={this.swipedRight}
         >
 
-        got occurrence options listed
-        now how to handle new item?
-        if there's no EventOccurrences._id then this must be a new instance. create new instance as soon as someone checks an item?
-        store that id on state?
-        how can I number each instance sequential? and set that as default title rather than crazy date/time stamp?
-
+          <h2>Log Occurrence</h2>
+          <p>
+          Total Occurrences Logged: X
+          </p>
 
           {this.props.eventsOccurrenceOptions ?
             <div>
@@ -145,13 +124,18 @@ class EventOccurrenceEditor extends React.Component {
                 setName="occurences"
                 type="checkbox"
                 controlFunc={this.handleOccurrenceSelection}
-                options={this.props.eventsOccurrenceOptions.occurrenceOptions.map(opt => opt.title)}
+                options={this.props.eventsOccurrenceOptions.occurrenceOptions.map(opt => (opt.active ? opt.title : '')).filter(title => title.length > 0)}
                 selectedOptions={this.state.selectedOccurrences}
               />
             </div>
         : ''}
-
-
+          {this.state.existingEventOccurrenceId ?
+            <Alert bsStyle="success">{this.state.selectedOccurrences.length} logged {this.state.selectedOccurrences.length > 1 ? 'options' : 'option'} saved.
+            </Alert> : <Alert>Select options to log</Alert>}
+          <ButtonToolbar>
+            <Button className="btn btn-primary" onClick={this.newOccurrence}>New Occurrence</Button>
+            <Button className="btn btn-primary">View Occurrences</Button>
+          </ButtonToolbar>
         </Swipeable>
 
 
@@ -167,6 +151,7 @@ EventOccurrenceEditor.defaultProps = {
 EventOccurrenceEditor.propTypes = {
   occurrenceOptions: PropTypes.array,
   eventsOccurrenceOptions: PropTypes.object,
+  eventId: PropTypes.string,
 };
 
 

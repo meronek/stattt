@@ -4,7 +4,6 @@ import EventOccurrenceEditor from '../../components/EventOccurrenceEditor/EventO
 
 const NewEventOccurrence = ({ history }) => (
   <div className="NewEvent">
-    <h4 className="page-header">New Occurance</h4>
     <EventOccurrenceEditor history={history} />
   </div>
 );
