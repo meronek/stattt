@@ -82,7 +82,7 @@ class EventOccurrenceOptions extends React.Component {
     const { eventsOccurrenceOptions } = this.props;
     return (
       <form ref={form => (this.form = form)} onSubmit={event => event.preventDefault()}>
-        <FormGroup>
+        <FormGroup className="well">
           <InputGroup>
             <input type="text" className="form-control" placeholder="New Occurrence Option" name="occurrenceTitle" />
             <span className="input-group-btn">
@@ -101,7 +101,7 @@ class EventOccurrenceOptions extends React.Component {
               {eventsOccurrenceOptions.occurrenceOptions[i].active ?
                 <div className="clearfix well-sm">
                   {eventsOccurrenceOptions.occurrenceOptions[i].title}
-                  <Button className="btn-sm pull-right" onClick={() => this.handleRemoveOption(eventsOccurrenceOptions.occurrenceOptions[i].title)}>Remove</Button>
+                  <Button className="btn-sm pull-right btn-danger" onClick={() => this.handleRemoveOption(eventsOccurrenceOptions.occurrenceOptions[i].title)}>Remove</Button>
                 </div>
                 :
                 ''
@@ -118,7 +118,7 @@ Object.keys(eventsOccurrenceOptions.occurrenceOptions).map(i => (
     {eventsOccurrenceOptions.occurrenceOptions[i].active === false ?
       <div className="clearfix well-sm">
         {eventsOccurrenceOptions.occurrenceOptions[i].title}
-        <Button className="btn-sm pull-right" onClick={() => this.handleReactivateOption(eventsOccurrenceOptions.occurrenceOptions[i].title)}>Activate</Button>
+        <Button className="btn-sm pull-right btn-success" onClick={() => this.handleReactivateOption(eventsOccurrenceOptions.occurrenceOptions[i].title)}>Activate</Button>
       </div>
       :
       ''

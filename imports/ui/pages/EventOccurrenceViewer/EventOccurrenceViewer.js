@@ -9,7 +9,6 @@ import EventOccurrences from '../../../api/EventOccurrences/EventOccurrences';
 import { timeago } from '../../../modules/dates';
 import Loading from '../../components/Loading/Loading';
 
-// import './Documents.scss';
 
 const handleRemove = (_id) => {
   if (confirm('Are you sure? This is permanent!')) {
