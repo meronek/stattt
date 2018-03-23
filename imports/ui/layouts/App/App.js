@@ -20,6 +20,7 @@ import EditDocument from '../../pages/EditDocument/EditDocument';
 import Events from '../../pages/Events/Events';
 import NewEvent from '../../pages/NewEvent/NewEvent';
 import NewEventOccurrence from '../../pages/NewEventOccurrence/NewEventOccurrence';
+import EventOccurrenceViewer from '../../pages/EventOccurrenceViewer/EventOccurrenceViewer';
 import ViewEvent from '../../pages/ViewEvent/ViewEvent';
 import EditEvent from '../../pages/EditEvent/EditEvent';
 
@@ -74,6 +75,7 @@ class App extends React.Component {
                 <Authenticated exact path="/events/new" component={NewEvent} setAfterLoginPath={setAfterLoginPath} {...props} {...state} />
                 <Authenticated exact path="/events/:_id" component={ViewEvent} setAfterLoginPath={setAfterLoginPath} {...props} {...state} />
                 <Authenticated exact path="/events/log/:_id" component={NewEventOccurrence} setAfterLoginPath={setAfterLoginPath} {...props} {...state} />
+                <Authenticated exact path="/events/occurrences/:_id" component={EventOccurrenceViewer} setAfterLoginPath={setAfterLoginPath} {...props} {...state} />
                 <Authenticated exact path="/events/:_id/edit" component={EditEvent} setAfterLoginPath={setAfterLoginPath} {...props} {...state} />
 
                 <Authenticated exact path="/documents" component={Documents} setAfterLoginPath={setAfterLoginPath} {...props} {...state} />

@@ -43,11 +43,13 @@ Meteor.methods({
       },
     });
   },
-  'eventOccurrence.remove': function eventOccurrenceRemove(occurrence) {
-    check(occurrence, { _id: String });
+  'eventOccurrence.remove': function eventOccurrenceRemove(_id) {
+    check(_id, {
+      _id: String,
 
+    });
     try {
-      return EventOccurrences.remove(occurrence);
+      return EventOccurrences.remove(_id);
     } catch (exception) {
       handleMethodException(exception);
     }
