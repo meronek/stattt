@@ -116,12 +116,11 @@ class EventOccurrenceEditor extends React.Component {
           onSwipedRight={this.swipedRight}
         >
           <h3>{this.props.eventsOccurrenceOptions ? this.props.eventsOccurrenceOptions.title : ''}</h3>
-          <h4>Log Occurrence: </h4>
 
           {this.props.eventsOccurrenceOptions ?
             <div>
               <CheckboxOrRadioGroup
-                title="Check off what went down:"
+                title="Log what just went down:"
                 setName="occurences"
                 type="checkbox"
                 controlFunc={this.handleOccurrenceSelection}
@@ -134,15 +133,19 @@ class EventOccurrenceEditor extends React.Component {
         : ''}
           {this.state.existingEventOccurrenceId ?
             <Alert bsStyle="success">{this.state.selectedOccurrences.length} logged {this.state.selectedOccurrences.length > 1 ? 'options' : 'option'} saved.
-            </Alert> : <Alert>Select options to log</Alert>}
-          <ButtonToolbar>
-            <Button className="btn btn-primary" onClick={this.newOccurrence}>New Occurrence</Button>
+            </Alert> : <Alert>Select options to log above.</Alert>}
+          {this.state.existingEventOccurrenceId ?
+            <ButtonToolbar>
 
-          </ButtonToolbar>
+              <Button className="btn btn-primary" onClick={this.newOccurrence}>New Occurrence</Button>
+
+            </ButtonToolbar>
+            : ''}
+
         </Swipeable>
 
         <h3>{this.props.eventsOccurrenceOptions ? this.props.eventsOccurrenceOptions.title : ''}</h3>
-        <Button className="btn btn-primary">{this.props.totalOccurrencesLogged} {this.props.totalOccurrencesLogged === 1 ? 'Occurrence' : 'Occurences'}</Button>
+        <Button className="btn btn-primary" href={`/events/occurrences/${this.props.eventId}`}>{this.props.totalOccurrencesLogged} {this.props.totalOccurrencesLogged === 1 ? 'Occurrence' : 'Occurences'}</Button>
 
       </form>
     );
@@ -172,6 +175,7 @@ export default withTracker((_id) => {
     eventId,
     totalOccurrencesLogged: EventOccurrences.find({ eventId }).fetch().length,
     allOccurrences: EventOccurrences.find({ eventId }).fetch(),
+    history: _id.history,
   };
 })(EventOccurrenceEditor);
 
