@@ -43,7 +43,7 @@ CheckboxOrRadioGroup.propTypes = {
   options: PropTypes.array.isRequired,
   selectedOptions: PropTypes.array.isRequired,
   controlFunc: PropTypes.func.isRequired,
-  allOccurrences: PropTypes.object.isRequired,
+  allOccurrences: PropTypes.array.isRequired,
 };
 
 export default CheckboxOrRadioGroup;
