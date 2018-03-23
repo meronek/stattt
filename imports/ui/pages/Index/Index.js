@@ -7,7 +7,7 @@ const Index = () => (
   <div className="Index">
     <img
       src="/statt400logo.png"
-      alt="Clever Beagle"
+      alt="Stattt"
     />
     <p>
       Just for fun and the love of numbers and patterns. Stattt is a quick and simple way to survey and log things about an event.

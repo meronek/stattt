@@ -18,7 +18,7 @@ class EventEditor extends React.Component {
       },
       messages: {
         title: {
-          required: 'Give your Event a nice title.',
+          required: 'Give your Event a title.',
         },
       },
       submitHandler() { component.handleSubmit(component.form); },

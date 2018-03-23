@@ -24,6 +24,8 @@ class EventOccurrenceEditor extends React.Component {
 
     this.handleOccurrenceSelection = this.handleOccurrenceSelection.bind(this);
     this.newOccurrence = this.newOccurrence.bind(this);
+    this.swipedLeft = this.swipedLeft.bind(this);
+    this.swipedRight = this.swipedRight.bind(this);
   }
 
   newOccurrence() {
@@ -100,10 +102,12 @@ class EventOccurrenceEditor extends React.Component {
 
 
   swipedLeft() {
-    // console.log('You swiped to the Left...IF they are on the entry page, move them to the most recent record, basically, like previous. ');
+    // console.log('You swiped to the Left...IF they are on the entry page, move them to the most recent record, basically, like previous. this is', this);
+    this.newOccurrence();
   }
   swipedRight() {
     // console.log('You swiped to the the Right...move them to the first record, basically like next when you are at the end of the record list');
+    this.props.history.push(`/events/occurrences/${this.props.eventId}`);
   }
 
 
@@ -145,8 +149,17 @@ class EventOccurrenceEditor extends React.Component {
         </Swipeable>
 
         <h3>{this.props.eventsOccurrenceOptions ? this.props.eventsOccurrenceOptions.title : ''}</h3>
-        <Button className="btn btn-primary" href={`/events/occurrences/${this.props.eventId}`}>{this.props.totalOccurrencesLogged} {this.props.totalOccurrencesLogged === 1 ? 'Occurrence' : 'Occurences'}</Button>
+        <Button
+          className="btn btn-primary"
 
+          onClick={() => this.props.history.push(`/events/occurrences/${this.props.eventId}`)}
+        >{this.props.totalOccurrencesLogged} {this.props.totalOccurrencesLogged === 1 ? 'Occurrence' : 'Occurences'}
+        </Button>
+        <h4>Tips:</h4>
+        <ul>
+          <li>Swipe left for a new occurrence</li>
+          <li>Swipe right to view existing occurrences</li>
+        </ul>
       </form>
     );
   }
@@ -167,7 +180,7 @@ export default withTracker((_id) => {
   // not sure how to get this other than from the url, this seems ghetto but fuck it
   // console.log('event id from query string is', _id.history.location.pathname.split('/')[3]);
   const eventId = _id.history.location.pathname.split('/')[3];
-  // console.log('eventId is ', eventId);
+  // console.log('history is ', _id.history);
   const subscription = Meteor.subscribe('event.view', eventId);
   return {
     loading: !subscription.ready(),
