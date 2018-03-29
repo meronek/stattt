@@ -1,13 +1,13 @@
 /* eslint-disable max-len, no-return-assign */
 
 import React from 'react';
-import PropTypes from 'prop-types';
-import { FormGroup, ControlLabel, Button, InputGroup, InputGroupButton } from 'react-bootstrap';
+import { Button } from 'react-bootstrap';
 import { Meteor } from 'meteor/meteor';
 import { withTracker } from 'meteor/react-meteor-data';
 import { Bert } from 'meteor/themeteorchef:bert';
 import validate from '../../../modules/validate';
 import Events from '../../../api/Events/Events';
+import EventOccurrenceOptionInsert from '../EventOccurrenceOptionInsert/EventOccurrenceOptionInsert';
 
 class EventOccurrenceOptions extends React.Component {
   componentDidMount() {
@@ -81,17 +81,10 @@ class EventOccurrenceOptions extends React.Component {
   render() {
     const { eventsOccurrenceOptions } = this.props;
     return (
-      <form ref={form => (this.form = form)} onSubmit={event => event.preventDefault()}>
-        <FormGroup className="well">
-          <InputGroup>
-            <input type="text" className="form-control" placeholder="New Occurrence Option" name="occurrenceTitle" />
-            <span className="input-group-btn">
-              <Button type="submit" bsStyle="success">
-                Add
-              </Button>
-            </span>
-          </InputGroup>
-        </FormGroup>
+      <div>
+
+        <EventOccurrenceOptionInsert eventId={this.props.eventId} />
+
         <h4>Current Options</h4>
 
         {
@@ -113,21 +106,21 @@ class EventOccurrenceOptions extends React.Component {
         <h4>Inactive Options</h4>
         {
 
-Object.keys(eventsOccurrenceOptions.occurrenceOptions).map(i => (
-  <div key={i}>
-    {eventsOccurrenceOptions.occurrenceOptions[i].active === false ?
-      <div className="clearfix well-sm">
-        {eventsOccurrenceOptions.occurrenceOptions[i].title}
-        <Button className="btn-sm pull-right btn-success" onClick={() => this.handleReactivateOption(eventsOccurrenceOptions.occurrenceOptions[i].title)}>Activate</Button>
-      </div>
-      :
-      ''
-    }
-  </div>
-  ))
-}
+          Object.keys(eventsOccurrenceOptions.occurrenceOptions).map(i => (
+            <div key={i}>
+              {eventsOccurrenceOptions.occurrenceOptions[i].active === false ?
+                <div className="clearfix well-sm">
+                  {eventsOccurrenceOptions.occurrenceOptions[i].title}
+                  <Button className="btn-sm pull-right btn-success" onClick={() => this.handleReactivateOption(eventsOccurrenceOptions.occurrenceOptions[i].title)}>Activate</Button>
+                </div>
+                :
+                ''
+              }
+            </div>
+            ))
+        }
 
-      </form>
+      </div>
 
     );
   }
