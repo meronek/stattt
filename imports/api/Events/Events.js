@@ -31,9 +31,20 @@ Events.schema = new SimpleSchema({
       if (this.isInsert) return (new Date()).toISOString();
     },
   },
+  ispublic: {
+    type: Boolean,
+    label: 'Is this event publicly viewable?',
+    autoValue() {
+      if (this.isInsert) return (true);
+    },
+  },
   title: {
     type: String,
     label: 'The title of the event.',
+  },
+  occurrenceType: {
+    type: String,
+    label: 'The type of occurrence you\'re logging at this event.',
   },
   occurrenceOptions: {
     type: Array,
