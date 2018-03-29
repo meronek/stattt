@@ -6,7 +6,7 @@ import { Meteor } from 'meteor/meteor';
 import { withTracker } from 'meteor/react-meteor-data';
 import { Bert } from 'meteor/themeteorchef:bert';
 import EventsCollection from '../../../api/Events/Events';
-import { monthDayYearAtTime } from '../../../modules/dates';
+import { monthDayYear } from '../../../modules/dates';
 import Loading from '../../components/Loading/Loading';
 
 // import './Documents.scss';
@@ -33,15 +33,17 @@ const Events = ({
     </div>
     {events.length ?
           events.map(({
-            _id, title, createdAt, occurrenceOptions,
+            _id, title, ispublic, createdAt, occurrenceOptions,
           }) => (
             <Well key={_id}>
               <Row>
-                <Col sm={12}>{title} ({occurrenceOptions.filter(occurrenceOptions => occurrenceOptions.active === true).length} {occurrenceOptions.filter(occurrenceOptions => occurrenceOptions.active === true).length === 1 ? 'Option' : 'Options'})
-                  <br />{monthDayYearAtTime(createdAt)}
+                <Col sm={12}>
+                  <h4>{title}</h4>
+                  {occurrenceOptions.filter(occurrenceOptions => occurrenceOptions.active === true).length} {occurrenceOptions.filter(occurrenceOptions => occurrenceOptions.active === true).length === 1 ? 'Option' : 'Options'}, {monthDayYear(createdAt)}, {ispublic ? 'Public' : 'Private'}
+
                 </Col>
               </Row>
-              <Row>
+              <Row className="well-sm">
                 <Col xs={4}>
                   <Button
                     bsStyle="primary"

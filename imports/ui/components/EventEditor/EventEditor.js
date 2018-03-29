@@ -10,7 +10,7 @@ import validate from '../../../modules/validate';
 class EventEditor extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { ispublic: props.event.ispublic };
+    this.state = { ispublic: true };
     // console.log('this.state.ispublic', this.state.ispublic);
     this.handleChange = this.handleChange.bind(this);
   }
@@ -32,7 +32,9 @@ class EventEditor extends React.Component {
   }
 
   handleChange(event) {
-    this.setState({ ispublic: event.target.value });
+    console.log('event target is', event.target.value, 'and its', event.target.value === 'true');
+    this.setState({ ispublic: event.target.value === 'true' });
+    console.log('state is now', this.state.ispublic);
   }
 
   handleSubmit(form) {
@@ -44,7 +46,7 @@ class EventEditor extends React.Component {
     const event = {
       title: form.title.value.trim(),
       occurrenceType: form.occurrenceType.value.trim(),
-      ispublic: this.state.ispublic === 'true',
+      ispublic: this.state.ispublic,
     };
 
     if (existingEvent) event._id = existingEvent;
@@ -76,7 +78,8 @@ class EventEditor extends React.Component {
           />
           <br /><br />
           <ControlLabel>Visibility: </ControlLabel>
-          <select value={this.state.ispublic.toString()} onChange={this.handleChange} className="form-control">
+          {console.log('ispublic is ', event.ispublic && event.ispublic.toString())}
+          <select value={this.state.ispublic} onChange={this.handleChange} className="form-control">
             <option value="true">Public: others can see your Stattt results.</option>
             <option value="false">Private: only you can see your Stattt results.</option>
           </select>

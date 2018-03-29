@@ -34,9 +34,6 @@ Events.schema = new SimpleSchema({
   ispublic: {
     type: Boolean,
     label: 'Is this event publicly viewable?',
-    autoValue() {
-      if (this.isInsert) return (true);
-    },
   },
   title: {
     type: String,
