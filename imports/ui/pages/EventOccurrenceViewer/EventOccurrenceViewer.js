@@ -12,7 +12,7 @@ import Loading from '../../components/Loading/Loading';
 
 const handleRemove = (_id) => {
   if (confirm('Are you sure? This is permanent!')) {
-	  const recordID = { _id };
+    const recordID = { _id };
     Meteor.call('eventOccurrence.remove', recordID, (error) => {
       if (error) {
         Bert.alert(`shit${error.reason}`, 'danger');
@@ -24,7 +24,7 @@ const handleRemove = (_id) => {
 };
 
 const EventOccurrenceViewer = ({
-  loading, eventOccurrences, match, history, eventId,
+  loading, eventOccurrences, eventId,
 }) => (!loading ? (
   <div className="EventsOccurrences">
     <div className="page-header clearfix">
@@ -62,8 +62,7 @@ const EventOccurrenceViewer = ({
 EventOccurrenceViewer.propTypes = {
   loading: PropTypes.bool.isRequired,
   eventOccurrences: PropTypes.arrayOf(PropTypes.object).isRequired,
-  match: PropTypes.object.isRequired,
-  history: PropTypes.object.isRequired,
+  eventId: PropTypes.string.isRequired,
 };
 
 export default withTracker((_id) => {

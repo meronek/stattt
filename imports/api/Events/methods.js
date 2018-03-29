@@ -8,6 +8,8 @@ Meteor.methods({
   'event.insert': function eventsInsert(doc) {
     check(doc, {
       title: String,
+      occurrenceType: String,
+      ispublic: Boolean,
     });
 
     try {
@@ -20,6 +22,8 @@ Meteor.methods({
     check(event, {
       _id: String,
       title: String,
+      occurrenceType: String,
+      ispublic: Boolean,
     });
 
     try {
