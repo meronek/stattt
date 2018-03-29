@@ -114,7 +114,7 @@ class EventOccurrenceEditor extends React.Component {
   render() {
     // const { occurenceOptions } = this.props.eventsOccurrenceOptions;
     return (
-      <form ref={form => (this.form = form)} onSubmit={event => event.preventDefault()}>
+      <div>
         <Swipeable
           onSwipedLeft={this.swipedLeft}
           onSwipedRight={this.swipedRight}
@@ -164,7 +164,7 @@ class EventOccurrenceEditor extends React.Component {
           <li>Swipe left for a new occurrence</li>
           <li>Swipe right to view existing occurrences</li>
         </ul>
-      </form>
+      </div>
     );
   }
 }
