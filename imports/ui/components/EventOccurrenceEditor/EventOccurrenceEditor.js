@@ -9,7 +9,7 @@ import { withTracker } from 'meteor/react-meteor-data';
 import Swipeable from 'react-swipeable';
 import Events from '../../../api/Events/Events';
 import EventOccurrences from '../../../api/EventOccurrences/EventOccurrences';
-
+import EventOccurrenceOptionInsert from '../EventOccurrenceOptionInsert/EventOccurrenceOptionInsert';
 
 import CheckboxOrRadioGroup from '../CheckboxOrRadioGroup/CheckboxOrRadioGroup';
 
@@ -135,9 +135,13 @@ class EventOccurrenceEditor extends React.Component {
               />
             </div>
         : ''}
+
           {this.state.existingEventOccurrenceId ?
-            <Alert bsStyle="success">{this.state.selectedOccurrences.length} logged {this.state.selectedOccurrences.length > 1 ? 'options' : 'option'} saved.
+            <Alert bsStyle="success">{this.state.selectedOccurrences.length} {this.state.selectedOccurrences.length > 1 ? 'options' : 'option'} saved. Swipe left for a new occurrence.
             </Alert> : <Alert>Select options to log above.</Alert>}
+
+          <EventOccurrenceOptionInsert eventId={this.props.eventId} />
+
           {this.state.existingEventOccurrenceId ?
             <ButtonToolbar>
 
