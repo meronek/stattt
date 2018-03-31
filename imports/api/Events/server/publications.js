@@ -4,9 +4,8 @@ import { check } from 'meteor/check';
 import Events from '../Events';
 import EventOccurrences from '../../EventOccurrences/EventOccurrences';
 
-Meteor.publish('events', function events(limit) {
-  check(limit, Number);
-  return Events.find({ owner: this.userId }, { limit });
+Meteor.publish('events', function events() {
+  return Events.find({ owner: this.userId });
 });
 
 Meteor.publish('events.count', function () {
