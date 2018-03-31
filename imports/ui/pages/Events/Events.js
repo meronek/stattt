@@ -3,13 +3,16 @@ import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import { Well, Alert, Button, Row, Col } from 'react-bootstrap';
 import { Meteor } from 'meteor/meteor';
+import { ReactiveVar } from 'meteor/reactive-var';
 import { withTracker } from 'meteor/react-meteor-data';
 import { Bert } from 'meteor/themeteorchef:bert';
+import { Counts } from 'meteor/tmeasday:publish-counts';
 import EventsCollection from '../../../api/Events/Events';
 import { monthDayYear } from '../../../modules/dates';
 import Loading from '../../components/Loading/Loading';
 
 // import './Documents.scss';
+const recordsPerPage = new ReactiveVar(10);
 
 const handleRemove = (eventId) => {
   if (confirm('Are you sure? This is permanent!')) {
@@ -24,7 +27,7 @@ const handleRemove = (eventId) => {
 };
 
 const Events = ({
-  loading, events, match, history,
+  loading, events, match, history, totalEvents,
 }) => (!loading ? (
   <div className="Events">
     <div className="page-header clearfix">
@@ -75,7 +78,16 @@ const Events = ({
             </Well>
           ))
          : <Alert bsStyle="warning">No events yet!</Alert>}
+    {console.log('total events is', totalEvents, 'and events.length is ', events.length)}
+    {events.length === totalEvents
+        ?
+          ''
+        : <input className="btn btn-primary" type="button" onClick={() => recordsPerPage.set(recordsPerPage.get() + 10)} value="Show More" />
+        }
+
+
   </div>
+
 ) : <Loading />);
 
 Events.propTypes = {
@@ -86,9 +98,14 @@ Events.propTypes = {
 };
 
 export default withTracker(() => {
-  const subscription = Meteor.subscribe('events');
+  // using this for pagination: https://atmospherejs.com/percolate/paginated-subscription
+  // also, watch this video: https://www.youtube.com/watch?v=FyUP4qvoroU
+  const subscription = Meteor.subscribeWithPagination('events', recordsPerPage.get());
+  const subscriptioncount = Meteor.subscribe('events.count');
+  console.log('subscriptioncount is ', subscriptioncount, 'counts get is ', Counts.get('events.count'));
   return {
     loading: !subscription.ready(),
     events: EventsCollection.find({}, { sort: { createdAt: -1 } }).fetch(),
+    totalEvents: Counts.get('events.count'),
   };
 })(Events);

@@ -1,10 +1,16 @@
 import { Meteor } from 'meteor/meteor';
+import { Counts } from 'meteor/tmeasday:publish-counts';
 import { check } from 'meteor/check';
 import Events from '../Events';
 import EventOccurrences from '../../EventOccurrences/EventOccurrences';
 
-Meteor.publish('events', function events() {
-  return Events.find({ owner: this.userId });
+Meteor.publish('events', function events(limit) {
+  check(limit, Number);
+  return Events.find({ owner: this.userId }, { limit });
+});
+
+Meteor.publish('events.count', function () {
+  Counts.publish(this, 'events.count', Events.find({ owner: this.userId }));
 });
 
 // Note: documents.view is also used when editing an existing document.
