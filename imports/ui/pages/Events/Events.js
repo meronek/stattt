@@ -13,6 +13,9 @@ import { monthDayYear } from '../../../modules/dates';
 import Loading from '../../components/Loading/Loading';
 
 // import './Documents.scss';
+const pageSize = 3;
+let currentPage = new ReactiveVar(1);
+
 
 class Events extends React.Component {
   constructor(props) {
@@ -29,6 +32,8 @@ class Events extends React.Component {
 
   handlePageChanged(newPage) {
     this.setState({ current: newPage });
+    currentPage = newPage + 1;
+    console.log('now currentpage is', currentPage);
   }
 
   handleRemove(eventId) {
@@ -103,20 +108,14 @@ class Events extends React.Component {
                    : <Alert bsStyle="warning">No events yet!</Alert>}
               {console.log('total events is', totalEvents, 'and events.length is ', events.length)}
 
-              {events.length === totalEvents
-                  ?
-                    ''
-                  :
-                    <Pager
-                      total={Math.floor(totalEvents / 5) + 1}
-                      current={this.state.current}
-                      visiblePages={this.state.visiblePage}
-                      titles={{ first: 'First', last: 'Last' }}
-                      className="pagination-sm"
-                      onPageChanged={this.handlePageChanged}
-                    />
-                  }
-
+              <Pager
+                total={Math.floor(totalEvents / 5) + 1}
+                current={this.state.current}
+                visiblePages={this.state.visiblePage}
+                titles={{ first: 'First', last: 'Last' }}
+                className="pagination-sm"
+                onPageChanged={this.handlePageChanged}
+              />
 
             </div>
 
@@ -138,13 +137,17 @@ Events.propTypes = {
 export default withTracker(() => {
   // using this for pagination: https://atmospherejs.com/percolate/paginated-subscription
   // also, watch this video: https://www.youtube.com/watch?v=FyUP4qvoroU
-  const subscription = Meteor.subscribeWithPagination('events');
-  // left off here March 30: so now what in the above subscription? I got my total pages, now subscribe using limit and offset each time someone clicks a page in the pager?
+  const subscription = Meteor.subscribeWithPagination('events.paged', currentPage * pageSize, pageSize);
+
+  // LEFT OFF HERE, WHY ISN'T REACTIVE VAR CAUSING THIS SUBSCRIPTION TO RELOAD?
+  // EVERYTHING ELSE IS GOOD, TOTAL PAGES, CURRENT PAGE, GETTING THE RIGHT PAGE NUMBER WHEN PAGER CLICKED, ETC
+
   const subscriptioncount = Meteor.subscribe('events.count');
   console.log('subscriptioncount is ', subscriptioncount, 'counts get is ', Counts.get('events.count'));
   return {
     loading: !subscription.ready(),
     events: EventsCollection.find({}, { sort: { createdAt: -1 } }).fetch(),
     totalEvents: Counts.get('events.count'),
+    currentPagetest: currentPage,
   };
 })(Events);
