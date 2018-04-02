@@ -13,8 +13,8 @@ import { monthDayYear } from '../../../modules/dates';
 import Loading from '../../components/Loading/Loading';
 
 // import './Documents.scss';
-const pageSize = 3;
-let currentPage = new ReactiveVar(1);
+const pageSize = 5;
+const currentPage = new ReactiveVar(1);
 
 
 class Events extends React.Component {
@@ -23,7 +23,7 @@ class Events extends React.Component {
 
     this.state = {
       current: 0,
-      visiblePage: 3,
+      visiblePage: 6,
     };
 
     this.handleRemove = this.handleRemove.bind(this);
@@ -32,8 +32,8 @@ class Events extends React.Component {
 
   handlePageChanged(newPage) {
     this.setState({ current: newPage });
-    currentPage = newPage + 1;
-    console.log('now currentpage is', currentPage);
+    currentPage.set(newPage + 1);
+    // console.log('now currentpage is', currentPage);
   }
 
   handleRemove(eventId) {
@@ -96,7 +96,7 @@ class Events extends React.Component {
                           <Col xs={4}>
                             <Button
                               bsStyle="danger"
-                              onClick={() => handleRemove(_id)}
+                              onClick={() => this.handleRemove(_id)}
                               block
                             >
                             Delete
@@ -105,8 +105,7 @@ class Events extends React.Component {
                         </Row>
                       </Well>
                     ))
-                   : <Alert bsStyle="warning">No events yet!</Alert>}
-              {console.log('total events is', totalEvents, 'and events.length is ', events.length)}
+                   : <Alert bsStyle="warning">Create some events and get logging!</Alert>}
 
               <Pager
                 total={Math.floor(totalEvents / 5) + 1}
@@ -137,13 +136,11 @@ Events.propTypes = {
 export default withTracker(() => {
   // using this for pagination: https://atmospherejs.com/percolate/paginated-subscription
   // also, watch this video: https://www.youtube.com/watch?v=FyUP4qvoroU
-  const subscription = Meteor.subscribeWithPagination('events.paged', currentPage * pageSize, pageSize);
-
-  // LEFT OFF HERE, WHY ISN'T REACTIVE VAR CAUSING THIS SUBSCRIPTION TO RELOAD?
-  // EVERYTHING ELSE IS GOOD, TOTAL PAGES, CURRENT PAGE, GETTING THE RIGHT PAGE NUMBER WHEN PAGER CLICKED, ETC
+  // console.log('here, currentpage is ', currentPage.get(), 'and page size is ', pageSize);
+  const subscription = Meteor.subscribeWithPagination('events.paged', (currentPage.get() - 1) * pageSize, pageSize);
 
   const subscriptioncount = Meteor.subscribe('events.count');
-  console.log('subscriptioncount is ', subscriptioncount, 'counts get is ', Counts.get('events.count'));
+  // console.log('subscriptioncount is ', subscriptioncount, 'counts get is ', Counts.get('events.count'));
   return {
     loading: !subscription.ready(),
     events: EventsCollection.find({}, { sort: { createdAt: -1 } }).fetch(),
