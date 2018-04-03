@@ -59,7 +59,7 @@ class Events extends React.Component {
           !loading ? (
             <div className="Events">
               <div className="page-header clearfix">
-                <h4 className="pull-left">Events</h4>
+                <h4 className="pull-left">{totalEvents} Event{totalEvents > 1 ? 's' : ''}</h4>
                 <Link className="btn btn-success pull-right" to={`${match.url}/new`}>Add Event</Link>
               </div>
               {events.length ?
