@@ -13,6 +13,7 @@ class EventEditor extends React.Component {
     this.state = { ispublic: true };
     // console.log('this.state.ispublic', this.state.ispublic);
     this.handleChange = this.handleChange.bind(this);
+    this.onLocationSet = this.onLocationSet.bind(this);
   }
   componentDidMount() {
     const component = this;
@@ -31,10 +32,17 @@ class EventEditor extends React.Component {
     });
   }
 
+  onLocationSet(data) {
+    // data.description
+    // data.coords.lat
+    // data.coords.lng
+    console.log('data is', data);
+  }
+
   handleChange(event) {
-    console.log('event target is', event.target.value, 'and its', event.target.value === 'true');
+    // console.log('event target is', event.target.value, 'and its', event.target.value === 'true');
     this.setState({ ispublic: event.target.value === 'true' });
-    console.log('state is now', this.state.ispublic);
+    // console.log('state is now', this.state.ispublic);
   }
 
   handleSubmit(form) {
@@ -67,6 +75,7 @@ class EventEditor extends React.Component {
     const { event } = this.props;
     return (
       <form ref={form => (this.form = form)} onSubmit={e => e.preventDefault()}>
+
         <FormGroup>
           <ControlLabel>Title</ControlLabel>
           <input
@@ -75,7 +84,9 @@ class EventEditor extends React.Component {
             name="title"
             defaultValue={event && event.title}
             placeholder="Describe the Event you're tracking."
+            autoFocus
           />
+          <p>Examples: A day at the beach. A night out at the club. An afternoon at the skatepark.</p>
           <br /><br />
           <ControlLabel>Visibility: </ControlLabel>
           {console.log('ispublic is ', event.ispublic && event.ispublic.toString())}
@@ -93,8 +104,9 @@ class EventEditor extends React.Component {
             placeholder="Example: a person at this event."
           />
 
-          <p>An <i>occurrence</i> is usually person you are logging things about. But, it can also be something else like cars going by, dogs, skateboards, etc.</p>
+          <p>An <i>occurrence</i> is usually a person you are logging things about. But, it can also be something else like cars going by, dogs, skateboards, etc.</p>
           <br />
+
 
         </FormGroup>
         <Button type="submit" bsStyle="success">
