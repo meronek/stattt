@@ -1,6 +1,7 @@
 /* eslint-disable max-len, no-return-assign */
 
 import React from 'react';
+import PropTypes from 'prop-types';
 import { Button } from 'react-bootstrap';
 import { Meteor } from 'meteor/meteor';
 import { withTracker } from 'meteor/react-meteor-data';
@@ -28,7 +29,6 @@ class EventOccurrenceOptions extends React.Component {
   }
 
   handleSubmit(form) {
-    const { history } = this.props;
     const occurrence = {
       _id: this.props.eventId,
       title: form.occurrenceTitle.value.trim(),
@@ -49,7 +49,6 @@ class EventOccurrenceOptions extends React.Component {
   }
 
   handleRemoveOption(optionTitle) {
-    const { match, history } = this.props;
     Meteor.call('events.removeOccurrenceOption', {
       optionTitle,
       _id: this.props.eventId,
@@ -64,7 +63,6 @@ class EventOccurrenceOptions extends React.Component {
   }
 
   handleReactivateOption(optionTitle) {
-    const { match, history } = this.props;
     Meteor.call('events.reactivateOccurrenceOption', {
       optionTitle,
       _id: this.props.eventId,
@@ -126,6 +124,10 @@ class EventOccurrenceOptions extends React.Component {
   }
 }
 
+EventOccurrenceOptions.propTypes = {
+  eventId: PropTypes.string.isRequired,
+  eventsOccurrenceOptions: PropTypes.object.isRequired,
+};
 
 export default withTracker((eventId) => {
   const subscription = Meteor.subscribe('event.view', eventId.eventId);
