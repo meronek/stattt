@@ -7,10 +7,11 @@ import { Meteor } from 'meteor/meteor';
 import { Bert } from 'meteor/themeteorchef:bert';
 import { withTracker } from 'meteor/react-meteor-data';
 import Swipeable from 'react-swipeable';
+import { CSSTransitionGroup } from 'react-transition-group';
 import Events from '../../../api/Events/Events';
 import EventOccurrences from '../../../api/EventOccurrences/EventOccurrences';
 import EventOccurrenceOptionInsert from '../EventOccurrenceOptionInsert/EventOccurrenceOptionInsert';
-
+import './EventOccurrenceEditor.css';
 import CheckboxOrRadioGroup from '../CheckboxOrRadioGroup/CheckboxOrRadioGroup';
 
 
@@ -20,6 +21,7 @@ class EventOccurrenceEditor extends React.Component {
 
     this.state = {
       selectedOccurrences: [],
+      showAnimation: true,
     };
 
     this.handleOccurrenceSelection = this.handleOccurrenceSelection.bind(this);
@@ -31,6 +33,9 @@ class EventOccurrenceEditor extends React.Component {
   newOccurrence() {
     // for a new Occurrence, simply clear out state variable and checkboxes
     this.setState({ selectedOccurrences: [], existingEventOccurrenceId: null });
+    // here, set showAnimation to the opposite of whatever it was
+    // this will trigger a new animation to fire
+    this.setState({ showAnimation: !this.state.showAnimation });
   }
 
 
@@ -114,57 +119,67 @@ class EventOccurrenceEditor extends React.Component {
   render() {
     // const { occurenceOptions } = this.props.eventsOccurrenceOptions;
     return (
-      <div>
-        <Swipeable
-          onSwipedLeft={this.swipedLeft}
-          onSwipedRight={this.swipedRight}
+      <Swipeable
+        onSwipedLeft={this.swipedLeft}
+        onSwipedRight={this.swipedRight}
+      >
+        <CSSTransitionGroup
+          transitionName="example"
+          transitionEnterTimeout={400}
+          transitionLeaveTimeout={300}
+          transitionEnter
+          transitionLeave
         >
-          <h3>{this.props.eventsOccurrenceOptions ? this.props.eventsOccurrenceOptions.title : ''}</h3>
 
-          {this.props.eventsOccurrenceOptions ?
-            <div>
-              <CheckboxOrRadioGroup
-                title="Log what just went down:"
-                setName="occurences"
-                type="checkbox"
-                controlFunc={this.handleOccurrenceSelection}
-                options={this.props.eventsOccurrenceOptions.occurrenceOptions.map(opt => (opt.active ? opt.title : '')).filter(title => title.length > 0)}
-                selectedOptions={this.state.selectedOccurrences}
-                allOccurrences={this.props.allOccurrences}
-                eventId={this.props.eventId}
-              />
-            </div>
+          <div key={this.state.showAnimation}>
+
+            <h3>{this.props.eventsOccurrenceOptions ? this.props.eventsOccurrenceOptions.title : ''}</h3>
+
+            {this.props.eventsOccurrenceOptions ?
+              <div>
+                <CheckboxOrRadioGroup
+                  title="Log what just went down:"
+                  setName="occurences"
+                  type="checkbox"
+                  controlFunc={this.handleOccurrenceSelection}
+                  options={this.props.eventsOccurrenceOptions.occurrenceOptions.map(opt => (opt.active ? opt.title : '')).filter(title => title.length > 0)}
+                  selectedOptions={this.state.selectedOccurrences}
+                  allOccurrences={this.props.allOccurrences}
+                  eventId={this.props.eventId}
+                />
+              </div>
         : ''}
 
-          {this.state.existingEventOccurrenceId ?
-            <Alert bsStyle="success">{this.state.selectedOccurrences.length} {this.state.selectedOccurrences.length > 1 ? 'options' : 'option'} saved. Swipe left for a new occurrence.
-            </Alert> : <Alert>Select options to log above.</Alert>}
+            {this.state.existingEventOccurrenceId ?
+              <Alert bsStyle="success">{this.state.selectedOccurrences.length} {this.state.selectedOccurrences.length > 1 ? 'options' : 'option'} saved. Swipe left for a new occurrence.
+              </Alert> : <Alert>Select options to log above.</Alert>}
 
-          <EventOccurrenceOptionInsert eventId={this.props.eventId} />
+            <EventOccurrenceOptionInsert eventId={this.props.eventId} />
 
-          {this.state.existingEventOccurrenceId ?
-            <ButtonToolbar>
+            {this.state.existingEventOccurrenceId ?
+              <ButtonToolbar>
 
-              <Button className="btn btn-primary" onClick={this.newOccurrence}>New Occurrence</Button>
+                <Button className="btn btn-primary" onClick={this.newOccurrence}>New Occurrence</Button>
 
-            </ButtonToolbar>
+              </ButtonToolbar>
             : ''}
 
-        </Swipeable>
 
-        <h3>{this.props.eventsOccurrenceOptions ? this.props.eventsOccurrenceOptions.title : ''}</h3>
-        <Button
-          className="btn btn-primary"
+            <h3>{this.props.eventsOccurrenceOptions ? this.props.eventsOccurrenceOptions.title : ''}</h3>
+            <Button
+              className="btn btn-primary"
 
-          onClick={() => this.props.history.push(`/events/occurrences/${this.props.eventId}`)}
-        >{this.props.totalOccurrencesLogged} {this.props.totalOccurrencesLogged === 1 ? 'Occurrence' : 'Occurences'}
-        </Button>
-        <h4>Tips:</h4>
-        <ul>
-          <li>Swipe left for a new occurrence</li>
-          <li>Swipe right to view existing occurrences</li>
-        </ul>
-      </div>
+              onClick={() => this.props.history.push(`/events/occurrences/${this.props.eventId}`)}
+            >{this.props.totalOccurrencesLogged} {this.props.totalOccurrencesLogged === 1 ? 'Occurrence' : 'Occurences'}
+            </Button>
+            <h4>Tips:</h4>
+            <ul>
+              <li>Swipe left for a new occurrence</li>
+              <li>Swipe right to view existing occurrences</li>
+            </ul>
+          </div>
+        </CSSTransitionGroup>
+      </Swipeable>
     );
   }
 }
