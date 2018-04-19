@@ -10,6 +10,7 @@ import Swipeable from 'react-swipeable';
 import { CSSTransitionGroup } from 'react-transition-group';
 import Events from '../../../api/Events/Events';
 import EventOccurrences from '../../../api/EventOccurrences/EventOccurrences';
+import EventOccurrencesCharts from '../EventOccurrencesCharts/EventOccurrencesCharts';
 import EventOccurrenceOptionInsert from '../EventOccurrenceOptionInsert/EventOccurrenceOptionInsert';
 import './EventOccurrenceEditor.css';
 import CheckboxOrRadioGroup from '../CheckboxOrRadioGroup/CheckboxOrRadioGroup';
@@ -118,6 +119,7 @@ class EventOccurrenceEditor extends React.Component {
 
   render() {
     // const { occurenceOptions } = this.props.eventsOccurrenceOptions;
+
     return (
       <Swipeable
         onSwipedLeft={this.swipedLeft}
@@ -165,20 +167,32 @@ class EventOccurrenceEditor extends React.Component {
             : ''}
 
 
-            <h3>{this.props.eventsOccurrenceOptions ? this.props.eventsOccurrenceOptions.title : ''}</h3>
+          </div>
+        </CSSTransitionGroup>
+        {this.props.eventsOccurrenceOptions ?
+          <EventOccurrencesCharts
+            options={this.props.eventsOccurrenceOptions.occurrenceOptions.map(opt => (opt.active ? opt.title : '')).filter(title => title.length > 0)}
+            allOccurrences={this.props.allOccurrences}
+            eventId={this.props.eventId}
+          /> : ''}
+
+        <div className="well">
+          <h4>Tips:</h4>
+          <ul>
+            <li>Swipe left for a new occurrence</li>
+            <li>Swipe right to view existing occurrences</li>
+          </ul>
+
+          <div className="text-center">
             <Button
               className="btn btn-primary"
 
               onClick={() => this.props.history.push(`/events/occurrences/${this.props.eventId}`)}
-            >{this.props.totalOccurrencesLogged} {this.props.totalOccurrencesLogged === 1 ? 'Occurrence' : 'Occurences'}
+            >View {this.props.totalOccurrencesLogged} {this.props.totalOccurrencesLogged === 1 ? 'Occurrence' : 'Occurences'}
             </Button>
-            <h4>Tips:</h4>
-            <ul>
-              <li>Swipe left for a new occurrence</li>
-              <li>Swipe right to view existing occurrences</li>
-            </ul>
           </div>
-        </CSSTransitionGroup>
+        </div>
+
       </Swipeable>
     );
   }
@@ -191,7 +205,7 @@ EventOccurrenceEditor.defaultProps = {
 EventOccurrenceEditor.propTypes = {
   occurrenceOptions: PropTypes.array,
   eventsOccurrenceOptions: PropTypes.object,
-  eventId: PropTypes.string,
+  eventId: PropTypes.string.isRequired,
 };
 
 
