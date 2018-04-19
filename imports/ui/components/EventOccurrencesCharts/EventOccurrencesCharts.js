@@ -15,11 +15,11 @@ function getObjects(obj, key, val) {
 }
 const EventOccurrenceCharts = props => (
   <div>
-    <h4>Summary of {props.allOccurrences.length} {props.allOccurrences.length === 1 ? 'Occurrence' : 'Occurrences'}</h4>
+    <h3>Summary of {props.allOccurrences.length} {props.allOccurrences.length === 1 ? 'Occurrence' : 'Occurrences'}</h3>
 
     {props.options.map((opt, index) => (
       <div key={opt}>
-        <strong>{opt} {getObjects(props.allOccurrences, 'title', opt).length} out of {props.allOccurrences.length}</strong>
+        <strong>{opt}: {getObjects(props.allOccurrences, 'title', opt).length}</strong>
 
         <ProgressBar
           now={Math.round((getObjects(props.allOccurrences, 'title', opt).length / props.allOccurrences.length) * 100)}
